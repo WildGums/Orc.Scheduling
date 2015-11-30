@@ -15,6 +15,9 @@ public static class ModuleInitializer
     {
         var serviceLocator = ServiceLocator.Default;
 
+        serviceLocator.RegisterType<ITimeService, TimeService>();
+        serviceLocator.RegisterType<ISchedulingService, SchedulingService>();
+
         var languageService = serviceLocator.ResolveType<ILanguageService>();
         languageService.RegisterLanguageSource(new LanguageResourceSource("Orc.Scheduling", "Orc.Scheduling.Properties", "Resources"));
     }
