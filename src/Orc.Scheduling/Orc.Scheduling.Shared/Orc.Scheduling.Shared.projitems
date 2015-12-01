@@ -11,8 +11,10 @@
   <ItemGroup>
     <Compile Include="$(MSBuildThisFileDirectory)..\..\SolutionAssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\Extensions\RunningTaskExtensions.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\Interfaces\IScheduledTask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\RunningTask.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Models\ScheduledTask.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Models\ScheduledTaskBase.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModuleInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\EventArgs\TaskEventArgs.cs" />
@@ -21,8 +23,5 @@
     <Compile Include="$(MSBuildThisFileDirectory)Services\Interfaces\ITimeService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SchedulingService.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\TimeService.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="$(MSBuildThisFileDirectory)Models\Interfaces\" />
   </ItemGroup>
 </Project>

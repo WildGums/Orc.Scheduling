@@ -9,32 +9,31 @@ namespace Orc.Scheduling
 {
     using System;
     using System.Threading.Tasks;
-    using Catel;
+    using Catel.Logging;
 
-    public class ScheduledTask : ICloneable
+    public class ScheduledTask : ScheduledTaskBase
     {
+        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+
         public ScheduledTask()
         {
             MaximumDuration = TimeSpan.MaxValue;
         }
 
-        public string Name { get; set; }
-
         public Func<Task> Action { get; set; }
 
-        public DateTime Start { get; set; }
-
-        public TimeSpan? Recurring { get; set; }
-
-        public TimeSpan MaximumDuration { get; set; }
-
-        public override string ToString()
+        public override async Task InvokeAsync()
         {
-            var value = string.Format("Name {0} | Start at {1} | Maximum duration is {2} | Recur every {3}", Name, Start, MaximumDuration, Recurring);
-            return value;
+            var action = Action;
+            if (action == null)
+            {
+                throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
+            }
+
+            await Action();
         }
 
-        public virtual object Clone()
+        public override object Clone()
         {
             return new ScheduledTask
             {

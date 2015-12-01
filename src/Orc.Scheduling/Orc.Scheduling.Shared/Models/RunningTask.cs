@@ -13,7 +13,7 @@ namespace Orc.Scheduling
 
     public class RunningTask
     {
-        public RunningTask(ScheduledTask scheduledTask, DateTime started)
+        public RunningTask(IScheduledTask scheduledTask, DateTime started)
         {
             Argument.IsNotNull(() => scheduledTask);
 
@@ -23,7 +23,7 @@ namespace Orc.Scheduling
             CancellationTokenSource = new CancellationTokenSource();
         }
 
-        public ScheduledTask ScheduledTask { get; private set; }
+        public IScheduledTask ScheduledTask { get; private set; }
 
         public DateTime Started { get; private set; }
 

@@ -79,3 +79,45 @@ To cancel a task, you need a handle to a `RunningTask` instance. This can be ret
 	{
 		runningTask.CancellationTokenSource.Cancel();
 	}
+
+## Creating custom ScheduledTask implementations
+
+It's possible to write a custom self-containing task that can handle everything itself. Below is an example of such a self-containing task:
+
+    public class CheckForUpdatesScheduledTask : ScheduledTaskBase
+    {
+        private readonly ICommandManager _commandManager;
+
+        public CheckForUpdatesScheduledTask(TimeSpan interval, ICommandManager commandManager)
+        {
+            Argument.IsNotNull(() => commandManager);
+
+            _commandManager = commandManager;
+
+            Name = "Check for updates";
+            Start = DateTime.Now.Add(interval);
+            Recurring = interval;
+        }
+
+        public override Task InvokeAsync()
+        {
+            var command = _commandManager.GetCommand(AppCommands.Application.CheckForUpdates);
+            if (command != null)
+            {
+                command.Execute(null);
+            }
+
+            return TaskHelper.Completed;
+        }
+
+        public override object Clone()
+        {
+            return new CheckForUpdatesScheduledTask(Recurring ?? TimeSpan.FromMinutes(5), _commandManager);
+        }
+    }
+
+This class can be constructed and added to the scheduling service. This will invoke the check for updates 10 minutes from now and recur every 10 minutes.
+
+	var checkForUpdatesScheduledTask = typeFactory.CreateInstanceWithParametersAndAutoCompletion<CheckForUpdatesScheduledTask>(TimeSpan.FromMinutes(10));
+
+	schedulingService.AddScheduledTask(checkForUpdatesScheduledTask);

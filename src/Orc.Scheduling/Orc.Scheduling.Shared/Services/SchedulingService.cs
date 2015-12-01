@@ -26,7 +26,7 @@ namespace Orc.Scheduling
 
         private readonly object _lock = new object();
         private readonly Timer _timer;
-        private readonly List<ScheduledTask> _scheduledTasks = new List<ScheduledTask>();
+        private readonly List<IScheduledTask> _scheduledTasks = new List<IScheduledTask>();
         private readonly List<RunningTaskInfo> _runningTasks = new List<RunningTaskInfo>();
         private readonly List<CancellationToken> _cancelledTokenSources = new List<CancellationToken>();
 
@@ -107,7 +107,7 @@ namespace Orc.Scheduling
             }
         }
 
-        public void AddScheduledTask(ScheduledTask scheduledTask)
+        public void AddScheduledTask(IScheduledTask scheduledTask)
         {
             Argument.IsNotNull(() => scheduledTask);
 
@@ -123,7 +123,7 @@ namespace Orc.Scheduling
 
         private async Task StartNewTasksAsync()
         {
-            var tasksToStart = new List<ScheduledTask>();
+            var tasksToStart = new List<IScheduledTask>();
 
             lock (_lock)
             {
@@ -149,7 +149,7 @@ namespace Orc.Scheduling
             }
         }
 
-        private bool StartTask(ScheduledTask scheduledTask)
+        private bool StartTask(IScheduledTask scheduledTask)
         {
             lock (_lock)
             {
@@ -160,16 +160,11 @@ namespace Orc.Scheduling
 
                 Log.Debug("Starting task {0}", scheduledTask);
 
-                if (scheduledTask.Action == null)
-                {
-                    throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action is null, cannot start task");
-                }
-
                 var runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
 
 #pragma warning disable 4014
                 // Note: don't await, we are a scheduler.
-                var task = TaskShim.Run(scheduledTask.Action, runningTask.CancellationTokenSource.Token);
+                var task = TaskShim.Run(scheduledTask.InvokeAsync, runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
 
@@ -198,7 +193,7 @@ namespace Orc.Scheduling
 
                 Log.Debug("Task {0} is a recurring task, rescheduling a copy at '{1}'", scheduledTask, startDate);
 
-                var newScheduledTask = (ScheduledTask)scheduledTask.Clone();
+                var newScheduledTask = (IScheduledTask)scheduledTask.Clone();
                 newScheduledTask.Start = startDate;
 
                 AddScheduledTask(newScheduledTask);

@@ -21,7 +21,9 @@ namespace Orc.Scheduling
         event EventHandler<TaskEventArgs> TaskStarted;
         event EventHandler<TaskEventArgs> TaskCanceled;
         event EventHandler<TaskEventArgs> TaskCompleted;
+
         void Start();
         void Stop();
+        void AddScheduledTask(IScheduledTask scheduledTask);
     }
 }
