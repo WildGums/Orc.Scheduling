@@ -273,5 +273,14 @@ namespace Orc.Scheduling.Tests.Services
 
             Assert.AreEqual(1, schedulingService.ScheduledTasks.Count);
         }
+
+        [TestCase]
+        public async Task DisablesTimerWhenNoTasksAreScheduled()
+        {
+            var timeService = new TimeService(TimeSpan.FromMinutes(1));
+            var schedulingService = new SchedulingService(timeService);
+
+            schedulingService.Start();
+        }
     }
 }

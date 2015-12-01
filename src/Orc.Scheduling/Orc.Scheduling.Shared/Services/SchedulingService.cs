@@ -343,18 +343,29 @@ namespace Orc.Scheduling
                 delta = TimeSpan.Zero;
             }
 
-            Log.Debug("Updating next timer tick to become active in '{0}'", delta);
-
-            // We need to translate time, we might have to wait 30 minutes, but that is 30 seconds if a minute takes just 1 second
-            var simulatedDelta = _timeService.TranslateSimulatedTimeToRealTime(delta);
-            if (simulatedDelta <= TimeSpan.Zero)
+            if (delta == TimeSpan.MaxValue)
             {
-                // Never immediately invoke timer, at least require 1 tick
-                simulatedDelta = TimeSpan.FromMilliseconds(1);
+                Log.Debug("Disabling timer, no upcoming events");
+
+                delta = Timeout.InfiniteTimeSpan;
+            }
+            else
+            {
+                Log.Debug("Updating next timer tick to become active in '{0}'", delta);
+
+                // We need to translate time, we might have to wait 30 minutes, but that is 30 seconds if a minute takes just 1 second
+                var simulatedDelta = _timeService.TranslateSimulatedTimeToRealTime(delta);
+                if (simulatedDelta <= TimeSpan.Zero)
+                {
+                    // Never immediately invoke timer, at least require 1 tick
+                    simulatedDelta = TimeSpan.FromMilliseconds(1);
+                }
+
+                delta = simulatedDelta;
             }
 
             // Important to change outside the lock
-            _timer.Change(simulatedDelta, Timeout.InfiniteTimeSpan);
+            _timer.Change(delta, Timeout.InfiniteTimeSpan);
         }
 
         private async void OnTimerTick(object state)
