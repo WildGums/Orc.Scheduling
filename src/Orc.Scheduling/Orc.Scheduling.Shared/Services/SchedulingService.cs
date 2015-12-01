@@ -265,7 +265,7 @@ namespace Orc.Scheduling
         private void UpdateTimerForNextEvent()
         {
             var now = _timeService.CurrentDateTime;
-            var delta = TimeSpan.FromMinutes(1);
+            var delta = TimeSpan.MaxValue;
 
             lock (_lock)
             {
