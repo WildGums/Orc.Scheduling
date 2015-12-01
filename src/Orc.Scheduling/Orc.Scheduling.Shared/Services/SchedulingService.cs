@@ -198,7 +198,7 @@ namespace Orc.Scheduling
 
                 Log.Debug("Task {0} is a recurring task, rescheduling a copy at '{1}'", scheduledTask, startDate);
 
-                var newScheduledTask = new ScheduledTask(scheduledTask);
+                var newScheduledTask = (ScheduledTask)scheduledTask.Clone();
                 newScheduledTask.Start = startDate;
 
                 AddScheduledTask(newScheduledTask);

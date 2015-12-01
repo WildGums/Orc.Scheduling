@@ -11,27 +11,16 @@ namespace Orc.Scheduling
     using System.Threading.Tasks;
     using Catel;
 
-    public class ScheduledTask
+    public class ScheduledTask : ICloneable
     {
         public ScheduledTask()
         {
             MaximumDuration = TimeSpan.MaxValue;
         }
 
-        public ScheduledTask(ScheduledTask scheduledTask)
-        {
-            Argument.IsNotNull(() => scheduledTask);
-
-            Name = scheduledTask.Name;
-            Action = scheduledTask.Action;
-            Start = scheduledTask.Start;
-            Recurring = scheduledTask.Recurring;
-            MaximumDuration = scheduledTask.MaximumDuration;
-        }
-
         public string Name { get; set; }
 
-        public Func<Task> Action { get; set; } 
+        public Func<Task> Action { get; set; }
 
         public DateTime Start { get; set; }
 
@@ -43,6 +32,18 @@ namespace Orc.Scheduling
         {
             var value = string.Format("Name {0} | Start at {1} | Maximum duration is {2} | Recur every {3}", Name, Start, MaximumDuration, Recurring);
             return value;
+        }
+
+        public virtual object Clone()
+        {
+            return new ScheduledTask
+            {
+                Name = Name,
+                Action = Action,
+                Start = Start,
+                Recurring = Recurring,
+                MaximumDuration = MaximumDuration
+            };
         }
     }
 }
