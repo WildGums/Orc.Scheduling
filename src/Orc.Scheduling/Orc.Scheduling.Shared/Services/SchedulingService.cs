@@ -164,7 +164,7 @@ namespace Orc.Scheduling
 
 #pragma warning disable 4014
                 // Note: don't await, we are a scheduler.
-                var task = TaskShim.Run(scheduledTask.InvokeAsync, runningTask.CancellationTokenSource.Token);
+                var task = TaskShim.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
 
