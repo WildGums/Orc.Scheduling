@@ -15,6 +15,9 @@ namespace Orc.Scheduling
     {
         #region Properties
         bool IsEnabled { get; }
+
+        List<IScheduledTask> ScheduledTasks { get; }
+
         List<RunningTask> RunningTasks { get; }
         #endregion
 
@@ -24,6 +27,8 @@ namespace Orc.Scheduling
 
         void Start();
         void Stop();
+
         void AddScheduledTask(IScheduledTask scheduledTask);
+        void RemoveScheduledTask(IScheduledTask scheduledTask);
     }
 }

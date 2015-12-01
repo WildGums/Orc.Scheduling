@@ -117,4 +117,10 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="Scheduling_RunningTasks" xml:space="preserve">
+    <value>Running tasks</value>
+  </data>
+  <data name="Scheduling_ScheduledTasks" xml:space="preserve">
+    <value>Scheduled tasks</value>
+  </data>
 </root>

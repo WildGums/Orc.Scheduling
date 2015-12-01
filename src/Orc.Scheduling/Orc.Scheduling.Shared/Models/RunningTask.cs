@@ -31,7 +31,8 @@ namespace Orc.Scheduling
 
         public override string ToString()
         {
-            return base.ToString();
+            var value = string.Format("{0} | Started at {1}", ScheduledTask.Name, Started);
+            return value;
         }
     }
 }

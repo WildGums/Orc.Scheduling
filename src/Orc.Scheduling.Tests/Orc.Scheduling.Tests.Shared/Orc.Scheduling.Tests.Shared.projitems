@@ -13,6 +13,7 @@
     <Compile Include="$(MSBuildThisFileDirectory)Models\Extensions\RunningTaskExtensionsFacts.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)ModuleInitializer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Properties\AssemblyInfo.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Services\Extensions\SchedulingServiceExtensions.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)Services\SchedulingServiceFacts.cs" />
   </ItemGroup>
 </Project>

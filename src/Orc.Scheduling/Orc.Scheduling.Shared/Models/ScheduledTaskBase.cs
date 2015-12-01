@@ -29,7 +29,9 @@ namespace Orc.Scheduling
 
         public override string ToString()
         {
-            var value = string.Format("Name {0} | Start at {1} | Maximum duration is {2} | Recur every {3}", Name, Start, MaximumDuration, Recurring);
+            var value = string.Format("{0} | Start at {1} | {2} | {3}", Name, Start, 
+                MaximumDuration < TimeSpan.MaxValue ? string.Format("Maximum duration is {0}", MaximumDuration) : "No maximum duration",
+                Recurring.HasValue ? string.Format("Recurs every {0}", Recurring) : "Not recurring");
             return value;
         }
 

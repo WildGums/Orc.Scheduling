@@ -59,5 +59,23 @@ namespace Orc.Scheduling.Properties {
                 resourceCulture = value;
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Running tasks.
+        /// </summary>
+        internal static string Scheduling_RunningTasks {
+            get {
+                return ResourceManager.GetString("Scheduling_RunningTasks", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Scheduled tasks.
+        /// </summary>
+        internal static string Scheduling_ScheduledTasks {
+            get {
+                return ResourceManager.GetString("Scheduling_ScheduledTasks", resourceCulture);
+            }
+        }
     }
 }

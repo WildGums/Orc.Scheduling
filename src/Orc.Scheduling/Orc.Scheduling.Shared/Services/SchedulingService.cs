@@ -44,6 +44,18 @@ namespace Orc.Scheduling
 
         public bool IsEnabled { get; private set; }
 
+        public List<IScheduledTask> ScheduledTasks
+        {
+            get
+            {
+                lock (_lock)
+                {
+                    return (from task in _scheduledTasks
+                            select task).ToList();
+                }
+            }
+        }
+
         public List<RunningTask> RunningTasks
         {
             get
@@ -118,6 +130,32 @@ namespace Orc.Scheduling
                 _scheduledTasks.Add(scheduledTask);
 
                 UpdateTimerForNextEvent();
+            }
+        }
+
+        public void RemoveScheduledTask(IScheduledTask scheduledTask)
+        {
+            Argument.IsNotNull(() => scheduledTask);
+
+            lock (_lock)
+            {
+                Log.Debug("Removing scheduled task {0}", scheduledTask);
+
+                var removedAnything = false;
+
+                for (int i = 0; i < _scheduledTasks.Count; i++)
+                {
+                    if (ReferenceEquals(scheduledTask, _scheduledTasks[i]))
+                    {
+                        _scheduledTasks.RemoveAt(i--);
+                        removedAnything = true;
+                    }
+                }
+
+                if (removedAnything)
+                {
+                    UpdateTimerForNextEvent();
+                }
             }
         }
 

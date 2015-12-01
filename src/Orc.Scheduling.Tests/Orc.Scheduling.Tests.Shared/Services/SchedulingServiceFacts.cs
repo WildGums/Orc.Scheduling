@@ -240,5 +240,38 @@ namespace Orc.Scheduling.Tests.Services
             Assert.IsFalse(isTaskCompleted);
             Assert.IsTrue(isCanceled);
         }
+
+        [TestCase]
+        public async Task RemovesScheduledTasks()
+        {
+            var timeService = new TimeService(TimeSpan.FromMinutes(1));
+            var schedulingService = new SchedulingService(timeService);
+
+            var scheduledTask1 = new ScheduledTask
+            {
+                Name = "task 1",
+                Start = timeService.CurrentDateTime.AddHours(5)
+            };
+
+            schedulingService.AddScheduledTask(scheduledTask1);
+
+            var scheduledTask2 = new ScheduledTask
+            {
+                Name = "task 2",
+                Start = timeService.CurrentDateTime,
+                Action = async () =>
+                {
+                    await TaskShim.Delay(TimeSpan.FromMinutes(1));
+                }
+            };
+
+            schedulingService.AddScheduledTask(scheduledTask2);
+
+            Assert.AreEqual(2, schedulingService.ScheduledTasks.Count);
+
+            schedulingService.RemoveScheduledTask(scheduledTask2);
+
+            Assert.AreEqual(1, schedulingService.ScheduledTasks.Count);
+        }
     }
 }
