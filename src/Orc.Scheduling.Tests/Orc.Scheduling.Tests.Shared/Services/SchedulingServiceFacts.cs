@@ -93,9 +93,10 @@ namespace Orc.Scheduling.Tests.Services
             {
                 Name = "task 2",
                 Start = timeService.CurrentDateTime,
-                Action = async () =>
+                Action = () =>
                 {
                     taskCompletedCounter++;
+                    return TaskHelper.Completed;
                 },
                 Recurring = TimeSpan.FromSeconds(2)
             };
