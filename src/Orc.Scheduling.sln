@@ -1,0 +1,80 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Scheduling.NET40", "Orc.Scheduling\Orc.Scheduling.NET40\Orc.Scheduling.NET40.csproj", "{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E426EAD0-F378-4A3D-9BCD-E42CED54EEC7}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "misc", "misc", "{3CC711D4-F114-4399-A440-711E40600B3B}"
+	ProjectSection(SolutionItems) = preProject
+		nuget.config = nuget.config
+		Orc.Scheduling.sln.DotSettings = Orc.Scheduling.sln.DotSettings
+		SolutionAssemblyInfo.cs = SolutionAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "lib", "lib", "{199C8479-5A41-4318-8129-FB56773099B9}"
+	ProjectSection(SolutionItems) = preProject
+		..\lib\repositories.config = ..\lib\repositories.config
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Scheduling.Tests.NET40", "Orc.Scheduling.Tests\Orc.Scheduling.Tests.NET40\Orc.Scheduling.Tests.NET40.csproj", "{A226D12E-9802-4364-B4F3-2CAAAE059DD4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Core", "Core", "{CFBE1C01-F567-429F-A88E-6A1270F2D3C8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{115ACCD5-F608-4889-B702-7FC928799D10}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.Scheduling.Shared", "Orc.Scheduling\Orc.Scheduling.Shared\Orc.Scheduling.Shared.shproj", "{5968A0F9-163D-4961-AF5D-65D5E8DBDF1D}"
+EndProject
+Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Orc.Scheduling.Tests.Shared", "Orc.Scheduling.Tests\Orc.Scheduling.Tests.Shared\Orc.Scheduling.Tests.Shared.shproj", "{5D23C1C2-96CA-4D69-A961-90C701302910}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Scheduling.NET45", "Orc.Scheduling\Orc.Scheduling.NET45\Orc.Scheduling.NET45.csproj", "{2DF17927-6654-421C-83F9-DB184F7D43F1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Orc.Scheduling.Tests.NET45", "Orc.Scheduling.Tests\Orc.Scheduling.Tests.NET45\Orc.Scheduling.Tests.NET45.csproj", "{98CFDE61-0912-4646-A2EE-AB09E3AB1543}"
+EndProject
+Global
+	GlobalSection(SharedMSBuildProjectFiles) = preSolution
+		Orc.Scheduling\Orc.Scheduling.Shared\Orc.Scheduling.Shared.projitems*{2df17927-6654-421c-83f9-db184f7d43f1}*SharedItemsImports = 4
+		Orc.Scheduling.Tests\Orc.Scheduling.Tests.Shared\Orc.Scheduling.Tests.Shared.projitems*{a226d12e-9802-4364-b4f3-2caaae059dd4}*SharedItemsImports = 4
+		Orc.Scheduling\Orc.Scheduling.Shared\Orc.Scheduling.Shared.projitems*{31ce78ce-896e-43b5-ae7e-a6a4b9944aa4}*SharedItemsImports = 4
+		Orc.Scheduling\Orc.Scheduling.Shared\Orc.Scheduling.Shared.projitems*{5968a0f9-163d-4961-af5d-65d5e8dbdf1d}*SharedItemsImports = 13
+		Orc.Scheduling.Tests\Orc.Scheduling.Tests.Shared\Orc.Scheduling.Tests.Shared.projitems*{98cfde61-0912-4646-a2ee-ab09e3ab1543}*SharedItemsImports = 4
+		Orc.Scheduling.Tests\Orc.Scheduling.Tests.Shared\Orc.Scheduling.Tests.Shared.projitems*{5d23c1c2-96ca-4d69-a961-90c701302910}*SharedItemsImports = 13
+	EndGlobalSection
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A226D12E-9802-4364-B4F3-2CAAAE059DD4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A226D12E-9802-4364-B4F3-2CAAAE059DD4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A226D12E-9802-4364-B4F3-2CAAAE059DD4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A226D12E-9802-4364-B4F3-2CAAAE059DD4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2DF17927-6654-421C-83F9-DB184F7D43F1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2DF17927-6654-421C-83F9-DB184F7D43F1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2DF17927-6654-421C-83F9-DB184F7D43F1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2DF17927-6654-421C-83F9-DB184F7D43F1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98CFDE61-0912-4646-A2EE-AB09E3AB1543}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98CFDE61-0912-4646-A2EE-AB09E3AB1543}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98CFDE61-0912-4646-A2EE-AB09E3AB1543}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98CFDE61-0912-4646-A2EE-AB09E3AB1543}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{31CE78CE-896E-43B5-AE7E-A6A4B9944AA4} = {CFBE1C01-F567-429F-A88E-6A1270F2D3C8}
+		{A226D12E-9802-4364-B4F3-2CAAAE059DD4} = {115ACCD5-F608-4889-B702-7FC928799D10}
+		{CFBE1C01-F567-429F-A88E-6A1270F2D3C8} = {E426EAD0-F378-4A3D-9BCD-E42CED54EEC7}
+		{115ACCD5-F608-4889-B702-7FC928799D10} = {E426EAD0-F378-4A3D-9BCD-E42CED54EEC7}
+		{5968A0F9-163D-4961-AF5D-65D5E8DBDF1D} = {CFBE1C01-F567-429F-A88E-6A1270F2D3C8}
+		{5D23C1C2-96CA-4D69-A961-90C701302910} = {115ACCD5-F608-4889-B702-7FC928799D10}
+		{2DF17927-6654-421C-83F9-DB184F7D43F1} = {CFBE1C01-F567-429F-A88E-6A1270F2D3C8}
+		{98CFDE61-0912-4646-A2EE-AB09E3AB1543} = {115ACCD5-F608-4889-B702-7FC928799D10}
+	EndGlobalSection
+EndGlobal
