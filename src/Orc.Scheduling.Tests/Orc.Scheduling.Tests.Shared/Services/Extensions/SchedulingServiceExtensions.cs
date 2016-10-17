@@ -17,8 +17,8 @@ namespace Orc.Scheduling.Tests.Services
         [TestFixture]
         public class TheGetSummaryMethod
         {
-            [TestCase]
-            public async Task ShowsRunningAndScheduledTasks()
+            [Test]
+            public async Task ShowsRunningAndScheduledTasksAsync()
             {
                 var timeService = new TimeService(TimeSpan.FromSeconds(1));
                 var schedulingService = new SchedulingService(timeService);
