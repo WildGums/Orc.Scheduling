@@ -368,7 +368,9 @@ namespace Orc.Scheduling
             _timer.Change(delta, Timeout.InfiniteTimeSpan);
         }
 
+#pragma warning disable AvoidAsyncVoid
         private async void OnTimerTick(object state)
+#pragma warning restore AvoidAsyncVoid
         {
             lock (_lock)
             {

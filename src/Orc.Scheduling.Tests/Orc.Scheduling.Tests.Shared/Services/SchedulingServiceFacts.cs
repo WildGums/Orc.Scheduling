@@ -15,8 +15,8 @@ namespace Orc.Scheduling.Tests.Services
     [TestFixture]
     public class SchedulingServiceFacts
     {
-        [TestCase]
-        public async Task CompletesTasksAfterSpecificPeriod()
+        [Test]
+        public async Task CompletesTasksAfterSpecificPeriodAsync()
         {
             var timeService = new TimeService(TimeSpan.FromSeconds(1));
             var schedulingService = new SchedulingService(timeService);
@@ -73,8 +73,8 @@ namespace Orc.Scheduling.Tests.Services
             Assert.IsFalse(isCanceled);
         }
 
-        [TestCase]
-        public async Task RestartsRecurringTasks()
+        [Test]
+        public async Task RestartsRecurringTasksAsync()
         {
             // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
             var timeService = new TimeService(TimeSpan.FromMinutes(1));
@@ -131,8 +131,8 @@ namespace Orc.Scheduling.Tests.Services
             Assert.AreEqual(3, taskCompletedCounter);
         }
 
-        [TestCase]
-        public async Task CancelsRunningTasksAboveMaximumDuration()
+        [Test]
+        public async Task CancelsRunningTasksAboveMaximumDurationAsync()
         {
             var timeService = new TimeService(TimeSpan.FromSeconds(1));
             var schedulingService = new SchedulingService(timeService);
@@ -187,8 +187,8 @@ namespace Orc.Scheduling.Tests.Services
             schedulingService.Stop();
         }
 
-        [TestCase]
-        public async Task CancelsRunningTasksWhenStopIsInvoked()
+        [Test]
+        public async Task CancelsRunningTasksWhenStopIsInvokedAsync()
         {
             var timeService = new TimeService(TimeSpan.FromSeconds(1));
             var schedulingService = new SchedulingService(timeService);
@@ -242,8 +242,8 @@ namespace Orc.Scheduling.Tests.Services
             Assert.IsTrue(isCanceled);
         }
 
-        [TestCase]
-        public async Task RemovesScheduledTasks()
+        [Test]
+        public async Task RemovesScheduledTasksAsync()
         {
             var timeService = new TimeService(TimeSpan.FromMinutes(1));
             var schedulingService = new SchedulingService(timeService);
@@ -275,8 +275,8 @@ namespace Orc.Scheduling.Tests.Services
             Assert.AreEqual(1, schedulingService.ScheduledTasks.Count);
         }
 
-        [TestCase]
-        public async Task DisablesTimerWhenNoTasksAreScheduled()
+        [Test]
+        public async Task DisablesTimerWhenNoTasksAreScheduledAsync()
         {
             var timeService = new TimeService(TimeSpan.FromMinutes(1));
             var schedulingService = new SchedulingService(timeService);
