@@ -8,6 +8,7 @@
 namespace Orc.Scheduling.Tests.Services
 {
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using NUnit.Framework;
     using Catel.Threading;
@@ -282,6 +283,90 @@ namespace Orc.Scheduling.Tests.Services
             var schedulingService = new SchedulingService(timeService);
 
             schedulingService.Start();
+        }
+
+        [Test]
+        public async Task RespectsReschedulingAfterExecutionCompletedIsFalseAsync()
+        {
+            // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
+            var timeService = new TimeService(TimeSpan.FromSeconds(1));
+            var schedulingService = new SchedulingService(timeService);
+            var hasReceivedCompletedEvent = false;
+
+            var scheduledTask1 = new ScheduledTask
+            {
+                Name = "task 1",
+                Start = timeService.CurrentDateTime.AddMinutes(1),
+                Recurring = TimeSpan.FromHours(1),
+                ScheduleRecurringTaskAfterTaskExecutionHasCompleted = false,
+                Action = async () => { await Task.Delay(1000); }
+            };
+
+            schedulingService.TaskStarted += (sender, e) =>
+            {
+                // Task must be here
+                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+
+                Assert.IsNotNull(newlyScheduledTask);
+
+                hasReceivedCompletedEvent = true;
+            };
+
+            schedulingService.AddScheduledTask(scheduledTask1);
+
+            schedulingService.Start();
+
+            await Task.Delay(10 * 1000);
+
+            schedulingService.Stop();
+
+            Assert.IsTrue(hasReceivedCompletedEvent);
+        }
+
+        [Test]
+        public async Task RespectsReschedulingAfterExecutionCompletedIsTrueAsync()
+        {
+            // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
+            var timeService = new TimeService(TimeSpan.FromSeconds(1));
+            var schedulingService = new SchedulingService(timeService);
+            var hasReceivedCompletedEvent = false;
+
+            var scheduledTask1 = new ScheduledTask
+            {
+                Name = "task 1",
+                Start = timeService.CurrentDateTime.AddMinutes(1),
+                Recurring = TimeSpan.FromHours(1),
+                ScheduleRecurringTaskAfterTaskExecutionHasCompleted = true,
+                Action = async () => { await Task.Delay(1000); }
+            };
+
+            schedulingService.TaskStarted += (sender, e) =>
+            {
+                // Task must be *not* here
+                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+
+                Assert.IsNull(newlyScheduledTask);
+            };
+
+            schedulingService.TaskCompleted += (sender, e) =>
+            {
+                // Task must be here
+                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+
+                Assert.IsNotNull(newlyScheduledTask);
+
+                hasReceivedCompletedEvent = true;
+            };
+
+            schedulingService.AddScheduledTask(scheduledTask1);
+
+            schedulingService.Start();
+
+            await Task.Delay(10 * 1000);
+
+            schedulingService.Stop();
+
+            Assert.IsTrue(hasReceivedCompletedEvent);
         }
     }
 }

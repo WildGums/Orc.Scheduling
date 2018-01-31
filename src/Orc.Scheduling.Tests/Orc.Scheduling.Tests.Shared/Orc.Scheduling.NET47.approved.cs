@@ -15,6 +15,7 @@ namespace Orc.Scheduling
         System.TimeSpan MaximumDuration { get; set; }
         string Name { get; set; }
         System.Nullable<System.TimeSpan> Recurring { get; set; }
+        bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         System.DateTime Start { get; set; }
         System.Threading.Tasks.Task InvokeAsync();
     }
@@ -71,6 +72,7 @@ namespace Orc.Scheduling
         public System.TimeSpan MaximumDuration { get; set; }
         public string Name { get; set; }
         public System.Nullable<System.TimeSpan> Recurring { get; set; }
+        public bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         public System.DateTime Start { get; set; }
         public abstract object Clone();
         public abstract System.Threading.Tasks.Task InvokeAsync();
