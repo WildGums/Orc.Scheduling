@@ -189,6 +189,9 @@ namespace Orc.Scheduling
 
         private bool StartTask(IScheduledTask scheduledTask)
         {
+            Task task = null;
+            RunningTask runningTask = null;
+
             lock (_lock)
             {
                 if (!IsEnabled)
@@ -198,43 +201,36 @@ namespace Orc.Scheduling
 
                 Log.Debug("Starting task {0}", scheduledTask);
 
-                var runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
+                runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
 
 #pragma warning disable 4014
-                // Note: don't await, we are a scheduler.
-                var task = TaskShim.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
+                // Note: don't await, we are a scheduler
+                task = TaskShim.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
 
                 Log.Debug("Started task {0}", scheduledTask);
-
-                var completed = task.IsCompleted;
-                if (completed)
-                {
-                    // Shortcut mode
-                    TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
-
-                    OnRunningTaskCompleted(task);
-                }
-                else
-                {
-                    _runningTasks.Add(new RunningTaskInfo(task, runningTask));
-
-                    TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
-                }
             }
 
-            // Note: it's important to start possible recurring tasks outside the loop
-            if (scheduledTask.Recurring.HasValue)
+            if (!scheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
             {
-                var startDate = _timeService.CurrentDateTime.Add(scheduledTask.Recurring.Value);
+                // Schedule immediately, even though task is still running
+                RescheduleRecurringTask(runningTask);
+            }
 
-                Log.Debug("Task {0} is a recurring task, rescheduling a copy at '{1}'", scheduledTask, startDate);
+            var completed = task.IsCompleted;
+            if (completed)
+            {
+                // Shortcut mode
+                TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
 
-                var newScheduledTask = (IScheduledTask)scheduledTask.Clone();
-                newScheduledTask.Start = startDate;
+                OnRunningTaskCompleted(task);
+            }
+            else
+            {
+                _runningTasks.Add(new RunningTaskInfo(task, runningTask));
 
-                AddScheduledTask(newScheduledTask);
+                TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
             }
 
             return true;
@@ -275,27 +271,73 @@ namespace Orc.Scheduling
             }
         }
 
+        private void RescheduleRecurringTask(RunningTask runningTask)
+        {
+            // Note: it's important to start possible recurring tasks outside the loop
+            var scheduledTask = runningTask.ScheduledTask;
+            if (scheduledTask.Recurring.HasValue)
+            {
+                // Note: we might have overridden the interval in the clone, so we need to clone it first
+                var newScheduledTask = (IScheduledTask)scheduledTask.Clone();
+
+                var startDate = _timeService.CurrentDateTime;
+
+                if (newScheduledTask.Recurring.HasValue)
+                {
+                    // Use new recurring value
+                    startDate = startDate.Add(newScheduledTask.Recurring.Value);
+                }
+                else
+                {
+                    // Use old recurring value
+                    startDate = startDate.Add(scheduledTask.Recurring.Value);
+                }
+
+                Log.Debug("Task {0} is a recurring task, rescheduling a copy at '{1}'", scheduledTask, startDate);
+
+                newScheduledTask.Start = startDate;
+
+                AddScheduledTask(newScheduledTask);
+            }
+        }
+
         private void OnRunningTaskCompleted(Task task)
         {
+            RunningTask runningTask = null;
+            CancellationTokenSource cancellationTokenSource = null;
+            CancellationToken cancellationToken = default(CancellationToken);
+
             lock (_lock)
             {
                 for (int i = 0; i < _runningTasks.Count; i++)
                 {
-                    var runningTask = _runningTasks[i];
-                    if (ReferenceEquals(runningTask.Task, task))
+                    var possibleRunningTask = _runningTasks[i];
+                    if (ReferenceEquals(possibleRunningTask.Task, task))
                     {
-                        _runningTasks.RemoveAt(i--);
+                        runningTask = possibleRunningTask.RunningTask;
 
-                        var cancellationTokenSource = runningTask.RunningTask.CancellationTokenSource;
+                        _runningTasks.RemoveAt(i);
 
-                        if (!task.IsCanceled && !cancellationTokenSource.IsCancellationRequested &&
-                            !_cancelledTokenSources.Contains(cancellationTokenSource.Token))
-                        {
-                            TaskCompleted.SafeInvoke(this, new TaskEventArgs(runningTask.RunningTask));
-                        }
-
+                        cancellationTokenSource = possibleRunningTask.RunningTask.CancellationTokenSource;
+                        cancellationToken = cancellationTokenSource.Token;
                         cancellationTokenSource.Dispose();
+
+                        break;
                     }
+                }
+            }
+
+            if (runningTask != null)
+            {
+                if (runningTask.ScheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
+                {
+                    RescheduleRecurringTask(runningTask);
+                }
+
+                if (!task.IsCanceled && !cancellationTokenSource.IsCancellationRequested &&
+                    !_cancelledTokenSources.Contains(cancellationToken))
+                {
+                    TaskCompleted.SafeInvoke(this, new TaskEventArgs(runningTask));
                 }
             }
         }

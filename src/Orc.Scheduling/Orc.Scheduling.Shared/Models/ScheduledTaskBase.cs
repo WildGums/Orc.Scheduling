@@ -15,6 +15,7 @@ namespace Orc.Scheduling
         protected ScheduledTaskBase()
         {
             MaximumDuration = TimeSpan.MaxValue;
+            ScheduleRecurringTaskAfterTaskExecutionHasCompleted = false;
         }
 
         public string Name { get; set; }
@@ -24,6 +25,8 @@ namespace Orc.Scheduling
         public TimeSpan? Recurring { get; set; }
 
         public TimeSpan MaximumDuration { get; set; }
+
+        public bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
 
         public abstract Task InvokeAsync();
 
