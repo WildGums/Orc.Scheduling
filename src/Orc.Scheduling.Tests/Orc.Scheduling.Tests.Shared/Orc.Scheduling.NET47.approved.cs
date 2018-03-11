@@ -1,22 +1,20 @@
 ﻿[assembly: System.Resources.NeutralResourcesLanguageAttribute("en-US")]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.7", FrameworkDisplayName=".NET Framework 4.7")]
-
-
 public class static ModuleInitializer
 {
     public static void Initialize() { }
 }
 namespace Orc.Scheduling
 {
-    
-    public interface IScheduledTask : System.ICloneable
+    public interface IScheduledTask
     {
         System.TimeSpan MaximumDuration { get; set; }
         string Name { get; set; }
         System.Nullable<System.TimeSpan> Recurring { get; set; }
         bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         System.DateTime Start { get; set; }
+        Orc.Scheduling.IScheduledTask Clone();
         System.Threading.Tasks.Task InvokeAsync();
     }
     public interface ISchedulingService
@@ -63,10 +61,10 @@ namespace Orc.Scheduling
     {
         public ScheduledTask() { }
         public System.Func<System.Threading.Tasks.Task> Action { get; set; }
-        public override object Clone() { }
+        public override Orc.Scheduling.IScheduledTask Clone() { }
         public override System.Threading.Tasks.Task InvokeAsync() { }
     }
-    public abstract class ScheduledTaskBase : Orc.Scheduling.IScheduledTask, System.ICloneable
+    public abstract class ScheduledTaskBase : Orc.Scheduling.IScheduledTask
     {
         protected ScheduledTaskBase() { }
         public System.TimeSpan MaximumDuration { get; set; }
@@ -74,7 +72,7 @@ namespace Orc.Scheduling
         public System.Nullable<System.TimeSpan> Recurring { get; set; }
         public bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         public System.DateTime Start { get; set; }
-        public abstract object Clone();
+        public abstract Orc.Scheduling.IScheduledTask Clone();
         public abstract System.Threading.Tasks.Task InvokeAsync();
         public override string ToString() { }
     }
