@@ -159,7 +159,9 @@ namespace Orc.Scheduling
             }
         }
 
+#pragma warning disable 1998
         private async Task StartNewTasksAsync()
+#pragma warning restore 1998
         {
             var tasksToStart = new List<IScheduledTask>();
 
@@ -236,7 +238,9 @@ namespace Orc.Scheduling
             return true;
         }
 
+#pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
         private async Task TerminateTasksTakingTooLongAsync()
+#pragma warning restore CS1998 // Async method lacks 'await' operators and will run synchronously
         {
             lock (_lock)
             {
