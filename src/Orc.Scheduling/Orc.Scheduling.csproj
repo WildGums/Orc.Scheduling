@@ -10,6 +10,11 @@
     <PackageTags>orc;scheduling;task;recurring</PackageTags>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- SonarQube requires a project guid -->
+    <ProjectGuid>285DE889-2065-4DE5-97EB-35FF3FBCD44A</ProjectGuid>
+  </PropertyGroup>
+  
   <ItemGroup>
     <PackageReference Include="MSBuild.Sdk.Extras" Version="1.5.4" PrivateAssets="all" />
     <PackageReference Include="Catel.Core" Version="5.5.0-beta0000" />
