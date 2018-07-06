@@ -8,13 +8,13 @@
 namespace Orc.Scheduling
 {
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading;
     using System.Threading.Tasks;
     using Catel;
     using Catel.Logging;
     using Catel.Threading;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading;
     using Timeout = Catel.Threading.Timeout;
     using Timer = Catel.Threading.Timer;
 
@@ -44,27 +44,21 @@ namespace Orc.Scheduling
 
         public bool IsEnabled { get; private set; }
 
+        [ObsoleteEx(ReplacementTypeOrMember = "GetScheduledTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
         public List<IScheduledTask> ScheduledTasks
         {
             get
             {
-                lock (_lock)
-                {
-                    return (from task in _scheduledTasks
-                            select task).ToList();
-                }
+                return GetScheduledTasks();
             }
         }
 
+        [ObsoleteEx(ReplacementTypeOrMember = "GetRunningTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
         public List<RunningTask> RunningTasks
         {
             get
             {
-                lock (_lock)
-                {
-                    return (from task in _runningTasks
-                            select task.RunningTask).ToList();
-                }
+                return GetRunningTasks();
             }
         }
 
@@ -73,6 +67,24 @@ namespace Orc.Scheduling
         public event EventHandler<TaskEventArgs> TaskCanceled;
 
         public event EventHandler<TaskEventArgs> TaskCompleted;
+
+        public List<IScheduledTask> GetScheduledTasks()
+        {
+            lock (_lock)
+            {
+                return (from task in _scheduledTasks
+                        select task).ToList();
+            }
+        }
+
+        public List<RunningTask> GetRunningTasks()
+        {
+            lock (_lock)
+            {
+                return (from task in _runningTasks
+                        select task.RunningTask).ToList();
+            }
+        }
 
         public void Start()
         {
@@ -143,7 +155,7 @@ namespace Orc.Scheduling
 
                 var removedAnything = false;
 
-                for (int i = 0; i < _scheduledTasks.Count; i++)
+                for (var i = 0; i < _scheduledTasks.Count; i++)
                 {
                     if (ReferenceEquals(scheduledTask, _scheduledTasks[i]))
                     {
@@ -172,7 +184,7 @@ namespace Orc.Scheduling
                     return;
                 }
 
-                for (int i = 0; i < _scheduledTasks.Count; i++)
+                for (var i = 0; i < _scheduledTasks.Count; i++)
                 {
                     var scheduledTask = _scheduledTasks[i];
                     if (scheduledTask.Start <= _timeService.CurrentDateTime)
@@ -189,7 +201,7 @@ namespace Orc.Scheduling
             }
         }
 
-        private bool StartTask(IScheduledTask scheduledTask)
+        private void StartTask(IScheduledTask scheduledTask)
         {
             Task task = null;
             RunningTask runningTask = null;
@@ -198,7 +210,7 @@ namespace Orc.Scheduling
             {
                 if (!IsEnabled)
                 {
-                    return false;
+                    return;
                 }
 
                 Log.Debug("Starting task {0}", scheduledTask);
@@ -234,8 +246,6 @@ namespace Orc.Scheduling
 
                 TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
             }
-
-            return true;
         }
 
 #pragma warning disable CS1998 // Async method lacks 'await' operators and will run synchronously
@@ -244,7 +254,7 @@ namespace Orc.Scheduling
         {
             lock (_lock)
             {
-                for (int i = _runningTasks.Count - 1; i >= 0; i--)
+                for (var i = _runningTasks.Count - 1; i >= 0; i--)
                 {
                     var runningTask = _runningTasks[i];
                     if (runningTask.RunningTask.IsExpired(_timeService))
@@ -261,7 +271,7 @@ namespace Orc.Scheduling
 
             lock (_lock)
             {
-                for (int i = 0; i < _runningTasks.Count; i++)
+                for (var i = 0; i < _runningTasks.Count; i++)
                 {
                     if (ReferenceEquals(_runningTasks[i].RunningTask, runningTask))
                     {
@@ -282,7 +292,7 @@ namespace Orc.Scheduling
             if (scheduledTask.Recurring.HasValue)
             {
                 // Note: we might have overridden the interval in the clone, so we need to clone it first
-                var newScheduledTask = (IScheduledTask)scheduledTask.Clone();
+                var newScheduledTask = scheduledTask.Clone();
 
                 var startDate = _timeService.CurrentDateTime;
 
@@ -309,11 +319,11 @@ namespace Orc.Scheduling
         {
             RunningTask runningTask = null;
             CancellationTokenSource cancellationTokenSource = null;
-            CancellationToken cancellationToken = default(CancellationToken);
+            var cancellationToken = default(CancellationToken);
 
             lock (_lock)
             {
-                for (int i = 0; i < _runningTasks.Count; i++)
+                for (var i = 0; i < _runningTasks.Count; i++)
                 {
                     var possibleRunningTask = _runningTasks[i];
                     if (ReferenceEquals(possibleRunningTask.Task, task))

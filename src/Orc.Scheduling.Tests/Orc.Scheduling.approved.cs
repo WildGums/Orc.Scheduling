@@ -20,12 +20,16 @@ namespace Orc.Scheduling
     public interface ISchedulingService
     {
         bool IsEnabled { get; }
+        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetRunningTasks", TreatAsErrorFromVersion="3.0")]
         System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
+        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetScheduledTasks", TreatAsErrorFromVersion="3.0")]
         System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
         void AddScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask);
+        System.Collections.Generic.List<Orc.Scheduling.RunningTask> GetRunningTasks();
+        System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> GetScheduledTasks();
         void RemoveScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask);
         void Start();
         void Stop();
@@ -80,12 +84,16 @@ namespace Orc.Scheduling
     {
         public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
+        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetRunningTasks", TreatAsErrorFromVersion="3.0")]
         public System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
+        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetScheduledTasks", TreatAsErrorFromVersion="3.0")]
         public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
         public void AddScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask) { }
+        public System.Collections.Generic.List<Orc.Scheduling.RunningTask> GetRunningTasks() { }
+        public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> GetScheduledTasks() { }
         public void RemoveScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask) { }
         public void Start() { }
         public void Stop() { }

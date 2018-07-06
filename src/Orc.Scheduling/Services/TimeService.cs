@@ -55,8 +55,6 @@ namespace Orc.Scheduling
         {
             var realTimeToWait = this.TranslateSimulatedTimeToRealTime(timeSpan);
 
-            //Log.Debug("Awaited time is '{0}', real awaited time is '{1}'", timeSpan, realTimeToWait);
-
             return TaskShim.Delay(realTimeToWait);
         }
     }
