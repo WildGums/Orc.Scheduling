@@ -269,11 +269,11 @@ namespace Orc.Scheduling.Tests.Services
 
             schedulingService.AddScheduledTask(scheduledTask2);
 
-            Assert.AreEqual(2, schedulingService.ScheduledTasks.Count);
+            Assert.AreEqual(2, schedulingService.GetScheduledTasks().Count);
 
             schedulingService.RemoveScheduledTask(scheduledTask2);
 
-            Assert.AreEqual(1, schedulingService.ScheduledTasks.Count);
+            Assert.AreEqual(1, schedulingService.GetScheduledTasks().Count);
         }
 
         [Test]
@@ -305,7 +305,7 @@ namespace Orc.Scheduling.Tests.Services
             schedulingService.TaskStarted += (sender, e) =>
             {
                 // Task must be here
-                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+                var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
                 Assert.IsNotNull(newlyScheduledTask);
 
@@ -343,7 +343,7 @@ namespace Orc.Scheduling.Tests.Services
             schedulingService.TaskStarted += (sender, e) =>
             {
                 // Task must be *not* here
-                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+                var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
                 Assert.IsNull(newlyScheduledTask);
             };
@@ -351,7 +351,7 @@ namespace Orc.Scheduling.Tests.Services
             schedulingService.TaskCompleted += (sender, e) =>
             {
                 // Task must be here
-                var newlyScheduledTask = schedulingService.ScheduledTasks.FirstOrDefault();
+                var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
                 Assert.IsNotNull(newlyScheduledTask);
 
