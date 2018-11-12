@@ -20,9 +20,9 @@ namespace Orc.Scheduling
     public interface ISchedulingService
     {
         bool IsEnabled { get; }
-        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetRunningTasks", TreatAsErrorFromVersion="3.0")]
+        [System.ObsoleteAttribute("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
         System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetScheduledTasks", TreatAsErrorFromVersion="3.0")]
+        [System.ObsoleteAttribute("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
         System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
@@ -84,9 +84,9 @@ namespace Orc.Scheduling
     {
         public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
-        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetRunningTasks", TreatAsErrorFromVersion="3.0")]
+        [System.ObsoleteAttribute("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
         public System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [ObsoleteExAttribute(RemoveInVersion="4.0", ReplacementTypeOrMember="GetScheduledTasks", TreatAsErrorFromVersion="3.0")]
+        [System.ObsoleteAttribute("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
         public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
