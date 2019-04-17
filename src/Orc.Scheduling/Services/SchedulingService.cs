@@ -236,7 +236,7 @@ namespace Orc.Scheduling
             if (completed)
             {
                 // Shortcut mode
-                TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
+                TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
 
                 OnRunningTaskCompleted(task);
             }
@@ -244,7 +244,7 @@ namespace Orc.Scheduling
             {
                 _runningTasks.Add(new RunningTaskInfo(task, runningTask));
 
-                TaskStarted.SafeInvoke(this, new TaskEventArgs(runningTask));
+                TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
             }
         }
 
@@ -278,7 +278,7 @@ namespace Orc.Scheduling
                         _cancelledTokenSources.Add(runningTask.CancellationTokenSource.Token);
                         runningTask.CancellationTokenSource.Cancel();
 
-                        TaskCanceled.SafeInvoke(this, new TaskEventArgs(runningTask));
+                        TaskCanceled?.Invoke(this, new TaskEventArgs(runningTask));
                         return;
                     }
                 }
@@ -351,7 +351,7 @@ namespace Orc.Scheduling
                 if (!task.IsCanceled && !cancellationTokenSource.IsCancellationRequested &&
                     !_cancelledTokenSources.Contains(cancellationToken))
                 {
-                    TaskCompleted.SafeInvoke(this, new TaskEventArgs(runningTask));
+                    TaskCompleted?.Invoke(this, new TaskEventArgs(runningTask));
                 }
             }
         }
