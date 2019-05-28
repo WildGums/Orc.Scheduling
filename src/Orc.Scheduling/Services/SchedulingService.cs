@@ -10,6 +10,7 @@ namespace Orc.Scheduling
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Threading;
     using System.Threading.Tasks;
     using Catel;
@@ -213,7 +214,7 @@ namespace Orc.Scheduling
                     return;
                 }
 
-                Log.Debug("Starting task {0}", scheduledTask);
+                Log.Debug($"Starting task {scheduledTask}");
 
                 runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
 
@@ -222,8 +223,8 @@ namespace Orc.Scheduling
                 task = TaskShim.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
-
-                Log.Debug("Started task {0}", scheduledTask);
+                
+                Log.Debug($"Started task {scheduledTask}");
             }
 
             if (!scheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
@@ -267,7 +268,7 @@ namespace Orc.Scheduling
 
         private void TerminateTask(RunningTask runningTask)
         {
-            Log.Debug("Terminating task {0}", runningTask);
+            Log.Debug($"Terminating task {runningTask}");
 
             lock (_lock)
             {
@@ -307,7 +308,7 @@ namespace Orc.Scheduling
                     startDate = startDate.Add(scheduledTask.Recurring.Value);
                 }
 
-                Log.Debug("Task {0} is a recurring task, rescheduling a copy at '{1}'", scheduledTask, startDate);
+                Log.Debug($"Task {scheduledTask} is a recurring task, rescheduling a copy at '{startDate}'");
 
                 newScheduledTask.Start = startDate;
 
@@ -320,6 +321,17 @@ namespace Orc.Scheduling
             RunningTask runningTask = null;
             CancellationTokenSource cancellationTokenSource = null;
             var cancellationToken = default(CancellationToken);
+
+            var exception = task.Exception as AggregateException;
+
+            var stringBuilder = new StringBuilder();
+            stringBuilder.AppendLine($"Task completed, searching for existing running task");
+            stringBuilder.AppendLine($"  * Canceled: {task.IsCanceled}");
+            stringBuilder.AppendLine($"  * Completed: {task.IsCompleted}");
+            stringBuilder.AppendLine($"  * Faulted: {task.IsFaulted}");
+            stringBuilder.AppendLine($"  * Exception: {exception}");
+
+            Log.Debug(stringBuilder.ToString());
 
             lock (_lock)
             {
@@ -343,6 +355,8 @@ namespace Orc.Scheduling
 
             if (runningTask != null)
             {
+                Log.Debug($"Found task '{runningTask}' for the completed task");
+
                 if (runningTask.ScheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
                 {
                     RescheduleRecurringTask(runningTask);
@@ -407,7 +421,7 @@ namespace Orc.Scheduling
             }
             else
             {
-                Log.Debug("Updating next timer tick to become active in '{0}'", delta);
+                Log.Debug($"Updating next timer tick to become active in '{delta}'");
 
                 // We need to translate time, we might have to wait 30 minutes, but that is 30 seconds if a minute takes just 1 second
                 var simulatedDelta = _timeService.TranslateSimulatedTimeToRealTime(delta);
