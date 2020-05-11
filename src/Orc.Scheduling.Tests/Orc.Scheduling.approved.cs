@@ -1,7 +1,7 @@
-﻿[assembly: System.Resources.NeutralResourcesLanguageAttribute("en-US")]
-[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.6", FrameworkDisplayName=".NET Framework 4.6")]
-public class static ModuleInitializer
+﻿[assembly: System.Resources.NeutralResourcesLanguage("en-US")]
+[assembly: System.Runtime.InteropServices.ComVisible(false)]
+[assembly: System.Runtime.Versioning.TargetFramework(".NETCoreApp,Version=v3.1", FrameworkDisplayName="")]
+public static class ModuleInitializer
 {
     public static void Initialize() { }
 }
@@ -11,7 +11,7 @@ namespace Orc.Scheduling
     {
         System.TimeSpan MaximumDuration { get; set; }
         string Name { get; set; }
-        System.Nullable<System.TimeSpan> Recurring { get; set; }
+        System.TimeSpan? Recurring { get; set; }
         bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         System.DateTime Start { get; set; }
         Orc.Scheduling.IScheduledTask Clone();
@@ -20,13 +20,13 @@ namespace Orc.Scheduling
     public interface ISchedulingService
     {
         bool IsEnabled { get; }
-        [System.ObsoleteAttribute("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
+        [System.Obsolete("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
         System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [System.ObsoleteAttribute("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
+        [System.Obsolete("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
         System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
         void AddScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask);
         System.Collections.Generic.List<Orc.Scheduling.RunningTask> GetRunningTasks();
         System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> GetScheduledTasks();
@@ -34,7 +34,7 @@ namespace Orc.Scheduling
         void Start();
         void Stop();
     }
-    public class static ISchedulingServiceExtensions
+    public static class ISchedulingServiceExtensions
     {
         public static string GetSummary(this Orc.Scheduling.ISchedulingService schedulingService) { }
     }
@@ -44,7 +44,7 @@ namespace Orc.Scheduling
         System.TimeSpan MinuteDuration { get; }
         System.Threading.Tasks.Task WaitAsync(System.TimeSpan timeSpan);
     }
-    public class static ITimeServiceExtensions
+    public static class ITimeServiceExtensions
     {
         public static System.TimeSpan TranslateRealTimeToSimulatedTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timePassed) { }
         public static System.TimeSpan TranslateSimulatedTimeToRealTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timeSpan) { }
@@ -57,7 +57,7 @@ namespace Orc.Scheduling
         public System.DateTime Started { get; }
         public override string ToString() { }
     }
-    public class static RunningTaskExtensions
+    public static class RunningTaskExtensions
     {
         public static bool IsExpired(this Orc.Scheduling.RunningTask runningTask, Orc.Scheduling.ITimeService timeService) { }
     }
@@ -73,7 +73,7 @@ namespace Orc.Scheduling
         protected ScheduledTaskBase() { }
         public System.TimeSpan MaximumDuration { get; set; }
         public string Name { get; set; }
-        public System.Nullable<System.TimeSpan> Recurring { get; set; }
+        public System.TimeSpan? Recurring { get; set; }
         public bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
         public System.DateTime Start { get; set; }
         public abstract Orc.Scheduling.IScheduledTask Clone();
@@ -84,9 +84,9 @@ namespace Orc.Scheduling
     {
         public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
-        [System.ObsoleteAttribute("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
+        [System.Obsolete("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
         public System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [System.ObsoleteAttribute("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
+        [System.Obsolete("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
         public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
