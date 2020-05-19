@@ -20,10 +20,6 @@ namespace Orc.Scheduling
     public interface ISchedulingService
     {
         bool IsEnabled { get; }
-        [System.Obsolete("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
-        System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [System.Obsolete("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
-        System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
         event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
@@ -84,10 +80,6 @@ namespace Orc.Scheduling
     {
         public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
-        [System.Obsolete("Use `GetRunningTasks` instead. Will be removed in version 4.0.0.", true)]
-        public System.Collections.Generic.List<Orc.Scheduling.RunningTask> RunningTasks { get; }
-        [System.Obsolete("Use `GetScheduledTasks` instead. Will be removed in version 4.0.0.", true)]
-        public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> ScheduledTasks { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;

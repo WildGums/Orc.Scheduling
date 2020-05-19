@@ -23,11 +23,11 @@ namespace Orc.Scheduling
             var serviceLocator = schedulingService.GetServiceLocator();
             var languageService = serviceLocator.ResolveType<ILanguageService>();
 
-            var scheduledTasks = (from task in schedulingService.ScheduledTasks
+            var scheduledTasks = (from task in schedulingService.GetScheduledTasks()
                                   orderby task.Start
                                   select task).ToList();
 
-            var runningTasks = (from task in schedulingService.RunningTasks
+            var runningTasks = (from task in schedulingService.GetRunningTasks()
                                 orderby task.Started
                                 select task).ToList();
 

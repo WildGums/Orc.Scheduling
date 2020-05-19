@@ -45,24 +45,6 @@ namespace Orc.Scheduling
 
         public bool IsEnabled { get; private set; }
 
-        [ObsoleteEx(ReplacementTypeOrMember = "GetScheduledTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
-        public List<IScheduledTask> ScheduledTasks
-        {
-            get
-            {
-                return GetScheduledTasks();
-            }
-        }
-
-        [ObsoleteEx(ReplacementTypeOrMember = "GetRunningTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
-        public List<RunningTask> RunningTasks
-        {
-            get
-            {
-                return GetRunningTasks();
-            }
-        }
-
         public event EventHandler<TaskEventArgs> TaskStarted;
 
         public event EventHandler<TaskEventArgs> TaskCanceled;

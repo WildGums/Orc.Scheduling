@@ -12,15 +12,7 @@ namespace Orc.Scheduling
 
     public interface ISchedulingService
     {
-        #region Properties
         bool IsEnabled { get; }
-
-        [ObsoleteEx(ReplacementTypeOrMember = "GetScheduledTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
-        List<IScheduledTask> ScheduledTasks { get; }
-
-        [ObsoleteEx(ReplacementTypeOrMember = "GetRunningTasks", TreatAsErrorFromVersion = "3.0", RemoveInVersion = "4.0")]
-        List<RunningTask> RunningTasks { get; }
-        #endregion
 
         event EventHandler<TaskEventArgs> TaskStarted;
         event EventHandler<TaskEventArgs> TaskCanceled;
