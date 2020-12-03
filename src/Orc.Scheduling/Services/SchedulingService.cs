@@ -304,7 +304,7 @@ namespace Orc.Scheduling
             CancellationTokenSource cancellationTokenSource = null;
             var cancellationToken = default(CancellationToken);
 
-            var exception = task.Exception as AggregateException;
+            var exception = task.Exception;
 
             var stringBuilder = new StringBuilder();
             stringBuilder.AppendLine($"Task completed, searching for existing running task");
