@@ -335,7 +335,7 @@ namespace Orc.Scheduling
                 }
             }
 
-            if (runningTask != null)
+            if (runningTask is not null)
             {
                 Log.Debug($"Found task '{runningTask}' for the completed task");
 

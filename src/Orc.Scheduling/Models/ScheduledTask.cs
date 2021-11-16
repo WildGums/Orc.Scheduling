@@ -25,7 +25,7 @@ namespace Orc.Scheduling
         public override async Task InvokeAsync()
         {
             var action = Action;
-            if (action == null)
+            if (action is null)
             {
                 throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
             }
