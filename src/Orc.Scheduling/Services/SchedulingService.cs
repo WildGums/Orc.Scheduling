@@ -26,7 +26,9 @@ namespace Orc.Scheduling
         private readonly ITimeService _timeService;
 
         private readonly object _lock = new object();
+#pragma warning disable IDISP006 // Implement IDisposable
         private readonly Timer _timer;
+#pragma warning restore IDISP006 // Implement IDisposable
         private readonly List<IScheduledTask> _scheduledTasks = new List<IScheduledTask>();
         private readonly List<RunningTaskInfo> _runningTasks = new List<RunningTaskInfo>();
         private readonly List<CancellationToken> _cancelledTokenSources = new List<CancellationToken>();

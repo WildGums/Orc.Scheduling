@@ -20,7 +20,9 @@ namespace Orc.Scheduling
         {
             Argument.IsNotNull(() => schedulingService);
 
+#pragma warning disable IDISP001 // Dispose created
             var serviceLocator = schedulingService.GetServiceLocator();
+#pragma warning restore IDISP001 // Dispose created
             var languageService = serviceLocator.ResolveType<ILanguageService>();
 
             var scheduledTasks = (from task in schedulingService.GetScheduledTasks()
