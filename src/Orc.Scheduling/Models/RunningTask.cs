@@ -27,7 +27,9 @@ namespace Orc.Scheduling
 
         public DateTime Started { get; private set; }
 
+#pragma warning disable IDISP006 // Implement IDisposable
         public CancellationTokenSource CancellationTokenSource { get; private set; }
+#pragma warning restore IDISP006 // Implement IDisposable
 
         public override string ToString()
         {
