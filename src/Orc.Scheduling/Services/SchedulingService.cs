@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SchedulingService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
     using System.Collections.Generic;
@@ -16,8 +9,6 @@ namespace Orc.Scheduling
     using Catel;
     using Catel.Logging;
     using Catel.Threading;
-    using Timeout = Catel.Threading.Timeout;
-    using Timer = Catel.Threading.Timer;
 
     public class SchedulingService : ISchedulingService
     {
@@ -37,7 +28,7 @@ namespace Orc.Scheduling
 
         public SchedulingService(ITimeService timeService)
         {
-            Argument.IsNotNull(() => timeService);
+            ArgumentNullException.ThrowIfNull(timeService);
 
             _timeService = timeService;
             _timer = new Timer(OnTimerTick);
@@ -47,11 +38,11 @@ namespace Orc.Scheduling
 
         public bool IsEnabled { get; private set; }
 
-        public event EventHandler<TaskEventArgs> TaskStarted;
+        public event EventHandler<TaskEventArgs>? TaskStarted;
 
-        public event EventHandler<TaskEventArgs> TaskCanceled;
+        public event EventHandler<TaskEventArgs>? TaskCanceled;
 
-        public event EventHandler<TaskEventArgs> TaskCompleted;
+        public event EventHandler<TaskEventArgs>? TaskCompleted;
 
         public List<IScheduledTask> GetScheduledTasks()
         {
@@ -118,7 +109,7 @@ namespace Orc.Scheduling
 
         public void AddScheduledTask(IScheduledTask scheduledTask)
         {
-            Argument.IsNotNull(() => scheduledTask);
+            ArgumentNullException.ThrowIfNull(scheduledTask);
 
             lock (_lock)
             {
@@ -132,7 +123,7 @@ namespace Orc.Scheduling
 
         public void RemoveScheduledTask(IScheduledTask scheduledTask)
         {
-            Argument.IsNotNull(() => scheduledTask);
+            ArgumentNullException.ThrowIfNull(scheduledTask);
 
             lock (_lock)
             {
@@ -188,8 +179,8 @@ namespace Orc.Scheduling
 
         private void StartTask(IScheduledTask scheduledTask)
         {
-            Task task = null;
-            RunningTask runningTask = null;
+            Task? task = null;
+            RunningTask? runningTask = null;
 
             lock (_lock)
             {
@@ -204,7 +195,7 @@ namespace Orc.Scheduling
 
 #pragma warning disable 4014
                 // Note: don't await, we are a scheduler
-                task = TaskShim.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
+                task = Task.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
                 
@@ -302,8 +293,8 @@ namespace Orc.Scheduling
 
         private void OnRunningTaskCompleted(Task task)
         {
-            RunningTask runningTask = null;
-            CancellationTokenSource cancellationTokenSource = null;
+            RunningTask? runningTask = null;
+            CancellationTokenSource? cancellationTokenSource = null;
             var cancellationToken = default(CancellationToken);
 
             var exception = task.Exception;
@@ -346,7 +337,8 @@ namespace Orc.Scheduling
                     RescheduleRecurringTask(runningTask);
                 }
 
-                if (!task.IsCanceled && !cancellationTokenSource.IsCancellationRequested &&
+                if (!task.IsCanceled && 
+                    (!cancellationTokenSource?.IsCancellationRequested ?? false) &&
                     !_cancelledTokenSources.Contains(cancellationToken))
                 {
                     TaskCompleted?.Invoke(this, new TaskEventArgs(runningTask));
@@ -423,7 +415,7 @@ namespace Orc.Scheduling
         }
 
 #pragma warning disable AvoidAsyncVoid
-        private async void OnTimerTick(object state)
+        private async void OnTimerTick(object? state)
 #pragma warning restore AvoidAsyncVoid
         {
             lock (_lock)

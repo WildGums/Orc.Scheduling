@@ -1,21 +1,13 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RunningTask.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
     using System.Threading;
-    using Catel;
 
     public class RunningTask
     {
         public RunningTask(IScheduledTask scheduledTask, DateTime started)
         {
-            Argument.IsNotNull(() => scheduledTask);
+            ArgumentNullException.ThrowIfNull(scheduledTask);
 
             ScheduledTask = scheduledTask;
             Started = started;

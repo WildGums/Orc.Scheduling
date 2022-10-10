@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ISchedulingService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
     using System.Collections.Generic;
@@ -14,9 +7,9 @@ namespace Orc.Scheduling
     {
         bool IsEnabled { get; }
 
-        event EventHandler<TaskEventArgs> TaskStarted;
-        event EventHandler<TaskEventArgs> TaskCanceled;
-        event EventHandler<TaskEventArgs> TaskCompleted;
+        event EventHandler<TaskEventArgs>? TaskStarted;
+        event EventHandler<TaskEventArgs>? TaskCanceled;
+        event EventHandler<TaskEventArgs>? TaskCompleted;
 
         List<IScheduledTask> GetScheduledTasks();
         List<RunningTask> GetRunningTasks();

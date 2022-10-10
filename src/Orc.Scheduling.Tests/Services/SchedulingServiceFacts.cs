@@ -37,7 +37,7 @@ namespace Orc.Scheduling.Tests.Services
                 Start = timeService.CurrentDateTime,
                 Action = async () =>
                 {
-                    await TaskShim.Delay(TimeSpan.FromSeconds(2));
+                    await Task.Delay(TimeSpan.FromSeconds(2));
                     isTaskCompleted = true;
                 }
             };
@@ -62,12 +62,12 @@ namespace Orc.Scheduling.Tests.Services
                 }
             };
 
-            await TaskShim.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             schedulingService.Stop();
 
             // Additional wait time to allow canceling etc
-            await TaskShim.Delay(TimeSpan.FromSeconds(1));
+            await Task.Delay(TimeSpan.FromSeconds(1));
 
             Assert.IsTrue(isCompleted);
             Assert.IsTrue(isTaskCompleted);
@@ -97,7 +97,7 @@ namespace Orc.Scheduling.Tests.Services
                 Action = () =>
                 {
                     taskCompletedCounter++;
-                    return TaskHelper.Completed;
+                    return Task.CompletedTask;
                 },
                 Recurring = TimeSpan.FromSeconds(2)
             };
@@ -122,7 +122,7 @@ namespace Orc.Scheduling.Tests.Services
                 }
             };
 
-            await TaskShim.Delay(TimeSpan.FromSeconds(5));
+            await Task.Delay(TimeSpan.FromSeconds(5));
 
             schedulingService.Stop();
 
@@ -153,7 +153,7 @@ namespace Orc.Scheduling.Tests.Services
                 Start = timeService.CurrentDateTime,
                 Action = async () =>
                 {
-                    await TaskShim.Delay(TimeSpan.FromMinutes(1));
+                    await Task.Delay(TimeSpan.FromMinutes(1));
                     isTaskCompleted = true;
                 },
                 MaximumDuration = TimeSpan.FromSeconds(30)
@@ -179,7 +179,7 @@ namespace Orc.Scheduling.Tests.Services
                 }
             };
 
-            await TaskShim.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             Assert.IsFalse(isCompleted);
             Assert.IsFalse(isTaskCompleted);
@@ -209,7 +209,7 @@ namespace Orc.Scheduling.Tests.Services
                 Start = timeService.CurrentDateTime,
                 Action = async () =>
                 {
-                    await TaskShim.Delay(TimeSpan.FromMinutes(1));
+                    await Task.Delay(TimeSpan.FromMinutes(1));
                     isTaskCompleted = true;
                 }
             };
@@ -234,7 +234,7 @@ namespace Orc.Scheduling.Tests.Services
                 }
             };
 
-            await TaskShim.Delay(TimeSpan.FromSeconds(2));
+            await Task.Delay(TimeSpan.FromSeconds(2));
 
             schedulingService.Stop();
 
@@ -263,7 +263,7 @@ namespace Orc.Scheduling.Tests.Services
                 Start = timeService.CurrentDateTime,
                 Action = async () =>
                 {
-                    await TaskShim.Delay(TimeSpan.FromMinutes(1));
+                    await Task.Delay(TimeSpan.FromMinutes(1));
                 }
             };
 

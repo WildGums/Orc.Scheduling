@@ -1,15 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ISchedulingServiceExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
+    using System;
     using System.Linq;
     using System.Text;
-    using Catel;
     using Catel.IoC;
     using Catel.Services;
     using Catel.Text;
@@ -18,12 +11,12 @@ namespace Orc.Scheduling
     {
         public static string GetSummary(this ISchedulingService schedulingService)
         {
-            Argument.IsNotNull(() => schedulingService);
+            ArgumentNullException.ThrowIfNull(schedulingService);
 
 #pragma warning disable IDISP001 // Dispose created
             var serviceLocator = schedulingService.GetServiceLocator();
 #pragma warning restore IDISP001 // Dispose created
-            var languageService = serviceLocator.ResolveType<ILanguageService>();
+            var languageService = serviceLocator.ResolveRequiredType<ILanguageService>();
 
             var scheduledTasks = (from task in schedulingService.GetScheduledTasks()
                                   orderby task.Start

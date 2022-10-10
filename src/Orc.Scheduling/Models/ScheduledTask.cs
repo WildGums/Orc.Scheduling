@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ScheduledTask.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
     using System.Threading.Tasks;
@@ -20,7 +13,7 @@ namespace Orc.Scheduling
             MaximumDuration = TimeSpan.MaxValue;
         }
 
-        public Func<Task> Action { get; set; }
+        public Func<Task>? Action { get; set; }
 
         public override async Task InvokeAsync()
         {
@@ -30,7 +23,7 @@ namespace Orc.Scheduling
                 throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
             }
 
-            await Action();
+            await action();
         }
 
         public override IScheduledTask Clone()

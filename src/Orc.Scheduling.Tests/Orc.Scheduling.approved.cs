@@ -20,9 +20,9 @@ namespace Orc.Scheduling
     public interface ISchedulingService
     {
         bool IsEnabled { get; }
-        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
-        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
-        event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCanceled;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCompleted;
+        event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskStarted;
         void AddScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask);
         System.Collections.Generic.List<Orc.Scheduling.RunningTask> GetRunningTasks();
         System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> GetScheduledTasks();
@@ -60,7 +60,7 @@ namespace Orc.Scheduling
     public class ScheduledTask : Orc.Scheduling.ScheduledTaskBase
     {
         public ScheduledTask() { }
-        public System.Func<System.Threading.Tasks.Task> Action { get; set; }
+        public System.Func<System.Threading.Tasks.Task>? Action { get; set; }
         public override Orc.Scheduling.IScheduledTask Clone() { }
         public override System.Threading.Tasks.Task InvokeAsync() { }
     }
@@ -80,9 +80,9 @@ namespace Orc.Scheduling
     {
         public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCanceled;
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskCompleted;
-        public event System.EventHandler<Orc.Scheduling.TaskEventArgs> TaskStarted;
+        public event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCanceled;
+        public event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCompleted;
+        public event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskStarted;
         public void AddScheduledTask(Orc.Scheduling.IScheduledTask scheduledTask) { }
         public System.Collections.Generic.List<Orc.Scheduling.RunningTask> GetRunningTasks() { }
         public System.Collections.Generic.List<Orc.Scheduling.IScheduledTask> GetScheduledTasks() { }

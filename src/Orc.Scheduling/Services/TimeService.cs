@@ -1,16 +1,8 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TimeService.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
     using System.Threading.Tasks;
     using Catel.Logging;
-    using Catel.Threading;
 
     public class TimeService : ITimeService
     {
@@ -55,7 +47,7 @@ namespace Orc.Scheduling
         {
             var realTimeToWait = this.TranslateSimulatedTimeToRealTime(timeSpan);
 
-            return TaskShim.Delay(realTimeToWait);
+            return Task.Delay(realTimeToWait);
         }
     }
 }

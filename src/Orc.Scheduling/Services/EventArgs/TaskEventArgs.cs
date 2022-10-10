@@ -1,20 +1,12 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="TaskStartedEventArgs.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling
+﻿namespace Orc.Scheduling
 {
     using System;
-    using Catel;
 
     public class TaskEventArgs : EventArgs
     {
         public TaskEventArgs(RunningTask runningTask)
         {
-            Argument.IsNotNull(() => runningTask);
+            ArgumentNullException.ThrowIfNull(runningTask);
 
             RunningTask = runningTask;
         }

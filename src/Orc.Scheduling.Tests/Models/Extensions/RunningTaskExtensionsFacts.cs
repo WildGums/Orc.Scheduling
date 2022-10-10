@@ -29,7 +29,7 @@ namespace Orc.Scheduling.Tests.Models
 
                 var runningTask = new RunningTask(scheduledTask, DateTime.Now);
 
-                await TaskShim.Delay(TimeSpan.FromSeconds(2));
+                await Task.Delay(TimeSpan.FromSeconds(2));
 
                 Assert.IsTrue(runningTask.IsExpired(timeService));
             }
@@ -46,7 +46,7 @@ namespace Orc.Scheduling.Tests.Models
 
                 var runningTask = new RunningTask(scheduledTask, DateTime.Now);
 
-                await TaskShim.Delay(TimeSpan.FromSeconds(1));
+                await Task.Delay(TimeSpan.FromSeconds(1));
 
                 Assert.IsFalse(runningTask.IsExpired(timeService));
             }

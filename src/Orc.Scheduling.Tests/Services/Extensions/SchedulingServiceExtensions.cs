@@ -37,13 +37,13 @@ namespace Orc.Scheduling.Tests.Services
                     Start = timeService.CurrentDateTime,
                     Action = async () =>
                     {
-                        await TaskShim.Delay(TimeSpan.FromMinutes(1));
+                        await Task.Delay(TimeSpan.FromMinutes(1));
                     }
                 };
 
                 schedulingService.AddScheduledTask(scheduledTask2);
 
-                await TaskShim.Delay(TimeSpan.FromSeconds(1));
+                await Task.Delay(TimeSpan.FromSeconds(1));
 
                 var summary = schedulingService.GetSummary();
 
