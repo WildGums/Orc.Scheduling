@@ -198,7 +198,7 @@
                 task = Task.Run(async () => await scheduledTask.InvokeAsync(), runningTask.CancellationTokenSource.Token);
                 task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
-                
+
                 Log.Debug($"Started task {scheduledTask}");
             }
 
@@ -208,19 +208,16 @@
                 RescheduleRecurringTask(runningTask);
             }
 
+            // Important: always add to running tasks and fire task started event
+            _runningTasks.Add(new RunningTaskInfo(task, runningTask));
+
+            TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
+
             var completed = task.IsCompleted;
             if (completed)
             {
-                // Shortcut mode
-                TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
-
+                // Shortcut mode, this method will check if the tasks completion event was already handled
                 OnRunningTaskCompleted(task);
-            }
-            else
-            {
-                _runningTasks.Add(new RunningTaskInfo(task, runningTask));
-
-                TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
             }
         }
 
