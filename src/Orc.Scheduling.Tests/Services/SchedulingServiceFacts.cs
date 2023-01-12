@@ -1,11 +1,4 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="SchedulingServiceFacts.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
-
-
-namespace Orc.Scheduling.Tests.Services
+﻿namespace Orc.Scheduling.Tests.Services
 {
     using System;
     using System.Linq;
