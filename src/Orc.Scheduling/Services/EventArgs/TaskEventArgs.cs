@@ -1,16 +1,15 @@
-﻿namespace Orc.Scheduling
+﻿namespace Orc.Scheduling;
+
+using System;
+
+public class TaskEventArgs : EventArgs
 {
-    using System;
-
-    public class TaskEventArgs : EventArgs
+    public TaskEventArgs(RunningTask runningTask)
     {
-        public TaskEventArgs(RunningTask runningTask)
-        {
-            ArgumentNullException.ThrowIfNull(runningTask);
+        ArgumentNullException.ThrowIfNull(runningTask);
 
-            RunningTask = runningTask;
-        }
-
-        public RunningTask RunningTask { get; private set; }
+        RunningTask = runningTask;
     }
+
+    public RunningTask RunningTask { get; private set; }
 }
