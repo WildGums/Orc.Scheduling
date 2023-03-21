@@ -1,41 +1,40 @@
-﻿namespace Orc.Scheduling
+﻿namespace Orc.Scheduling;
+
+using System;
+using System.Threading.Tasks;
+using Catel.Logging;
+
+public class ScheduledTask : ScheduledTaskBase
 {
-    using System;
-    using System.Threading.Tasks;
-    using Catel.Logging;
+    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
 
-    public class ScheduledTask : ScheduledTaskBase
+    public ScheduledTask()
     {
-        private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+        MaximumDuration = TimeSpan.MaxValue;
+    }
 
-        public ScheduledTask()
+    public Func<Task>? Action { get; set; }
+
+    public override async Task InvokeAsync()
+    {
+        var action = Action;
+        if (action is null)
         {
-            MaximumDuration = TimeSpan.MaxValue;
+            throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
         }
 
-        public Func<Task>? Action { get; set; }
+        await action();
+    }
 
-        public override async Task InvokeAsync()
+    public override IScheduledTask Clone()
+    {
+        return new ScheduledTask
         {
-            var action = Action;
-            if (action is null)
-            {
-                throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
-            }
-
-            await action();
-        }
-
-        public override IScheduledTask Clone()
-        {
-            return new ScheduledTask
-            {
-                Name = Name,
-                Action = Action,
-                Start = Start,
-                Recurring = Recurring,
-                MaximumDuration = MaximumDuration
-            };
-        }
+            Name = Name,
+            Action = Action,
+            Start = Start,
+            Recurring = Recurring,
+            MaximumDuration = MaximumDuration
+        };
     }
 }
