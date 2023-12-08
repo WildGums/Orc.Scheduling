@@ -39,7 +39,7 @@ public class SchedulingServiceExtensions
 
             var summary = schedulingService.GetSummary();
 
-            Assert.IsNotNull(summary);
+            Assert.That(summary, Is.Not.Null);
         }
     }
 }

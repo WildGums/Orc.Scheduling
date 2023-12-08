@@ -23,7 +23,7 @@ public class RunningTaskExtensionsFacts
 
             await Task.Delay(TimeSpan.FromSeconds(2));
 
-            Assert.IsTrue(runningTask.IsExpired(timeService));
+            Assert.That(runningTask.IsExpired(timeService), Is.True);
         }
 
         [TestCase]
@@ -40,7 +40,7 @@ public class RunningTaskExtensionsFacts
 
             await Task.Delay(TimeSpan.FromSeconds(1));
 
-            Assert.IsFalse(runningTask.IsExpired(timeService));
+            Assert.That(runningTask.IsExpired(timeService), Is.False);
         }
     }
 }

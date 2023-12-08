@@ -62,9 +62,9 @@ public class SchedulingServiceFacts
         // Additional wait time to allow canceling etc
         await Task.Delay(TimeSpan.FromSeconds(1));
 
-        Assert.IsTrue(isCompleted);
-        Assert.IsTrue(isTaskCompleted);
-        Assert.IsFalse(isCanceled);
+        Assert.That(isCompleted, Is.True);
+        Assert.That(isTaskCompleted, Is.True);
+        Assert.That(isCanceled, Is.False);
     }
 
     [Test]
@@ -119,10 +119,10 @@ public class SchedulingServiceFacts
 
         schedulingService.Stop();
 
-        Assert.IsTrue(isCompleted);
-        Assert.IsFalse(isCanceled);
+        Assert.That(isCompleted, Is.True);
+        Assert.That(isCanceled, Is.False);
 
-        Assert.AreEqual(3, taskCompletedCounter);
+        Assert.That(taskCompletedCounter, Is.EqualTo(3));
     }
 
     [Test]
@@ -174,9 +174,9 @@ public class SchedulingServiceFacts
 
         await Task.Delay(TimeSpan.FromSeconds(2));
 
-        Assert.IsFalse(isCompleted);
-        Assert.IsFalse(isTaskCompleted);
-        Assert.IsTrue(isCanceled);
+        Assert.That(isCompleted, Is.False);
+        Assert.That(isTaskCompleted, Is.False);
+        Assert.That(isCanceled, Is.True);
 
         schedulingService.Stop();
     }
@@ -231,9 +231,9 @@ public class SchedulingServiceFacts
 
         schedulingService.Stop();
 
-        Assert.IsFalse(isCompleted);
-        Assert.IsFalse(isTaskCompleted);
-        Assert.IsTrue(isCanceled);
+        Assert.That(isCompleted, Is.False);
+        Assert.That(isTaskCompleted, Is.False);
+        Assert.That(isCanceled, Is.True);
     }
 
     [Test]
@@ -262,11 +262,11 @@ public class SchedulingServiceFacts
 
         schedulingService.AddScheduledTask(scheduledTask2);
 
-        Assert.AreEqual(2, schedulingService.GetScheduledTasks().Count);
+        Assert.That(schedulingService.GetScheduledTasks().Count, Is.EqualTo(2));
 
         schedulingService.RemoveScheduledTask(scheduledTask2);
 
-        Assert.AreEqual(1, schedulingService.GetScheduledTasks().Count);
+        Assert.That(schedulingService.GetScheduledTasks().Count, Is.EqualTo(1));
     }
 
     [Test]
@@ -300,7 +300,7 @@ public class SchedulingServiceFacts
             // Task must be here
             var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
-            Assert.IsNotNull(newlyScheduledTask);
+            Assert.That(newlyScheduledTask, Is.Not.Null);
 
             hasReceivedCompletedEvent = true;
         };
@@ -313,7 +313,7 @@ public class SchedulingServiceFacts
 
         schedulingService.Stop();
 
-        Assert.IsTrue(hasReceivedCompletedEvent);
+        Assert.That(hasReceivedCompletedEvent, Is.True);
     }
 
     [Test]
@@ -338,7 +338,7 @@ public class SchedulingServiceFacts
             // Task must be *not* here
             var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
-            Assert.IsNull(newlyScheduledTask);
+            Assert.That(newlyScheduledTask, Is.Null);
         };
 
         schedulingService.TaskCompleted += (sender, e) =>
@@ -346,7 +346,7 @@ public class SchedulingServiceFacts
             // Task must be here
             var newlyScheduledTask = schedulingService.GetScheduledTasks().FirstOrDefault();
 
-            Assert.IsNotNull(newlyScheduledTask);
+            Assert.That(newlyScheduledTask, Is.Not.Null);
 
             hasReceivedCompletedEvent = true;
         };
@@ -359,6 +359,6 @@ public class SchedulingServiceFacts
 
         schedulingService.Stop();
 
-        Assert.IsTrue(hasReceivedCompletedEvent);
+        Assert.That(hasReceivedCompletedEvent, Is.True);
     }
 }
