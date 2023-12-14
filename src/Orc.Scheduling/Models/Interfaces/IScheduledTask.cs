@@ -1,26 +1,18 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="RunningTask.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+﻿namespace Orc.Scheduling;
 
+using System;
+using System.Threading.Tasks;
 
-namespace Orc.Scheduling
+public interface IScheduledTask
 {
-    using System;
-    using System.Threading.Tasks;
+    string Name { get; set; }
+    DateTime Start { get; set; }
+    TimeSpan? Recurring { get; set; }
+    bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
 
-    public interface IScheduledTask
-    {
-        string Name { get; set; }
-        DateTime Start { get; set; }
-        TimeSpan? Recurring { get; set; }
-        bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
+    TimeSpan MaximumDuration { get; set; }
 
-        TimeSpan MaximumDuration { get; set; }
+    Task InvokeAsync();
 
-        Task InvokeAsync();
-
-        IScheduledTask Clone();
-    }
+    IScheduledTask Clone();
 }

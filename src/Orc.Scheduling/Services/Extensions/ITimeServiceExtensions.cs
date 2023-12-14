@@ -1,39 +1,29 @@
-﻿// --------------------------------------------------------------------------------------------------------------------
-// <copyright file="ITimeServiceExtensions.cs" company="WildGums">
-//   Copyright (c) 2008 - 2015 WildGums. All rights reserved.
-// </copyright>
-// --------------------------------------------------------------------------------------------------------------------
+﻿namespace Orc.Scheduling;
 
+using System;
+using Catel;
 
-namespace Orc.Scheduling
+public static class ITimeServiceExtensions
 {
-    using System;
-    using Catel;
-
-    public static class ITimeServiceExtensions
+    public static TimeSpan TranslateSimulatedTimeToRealTime(this ITimeService timeService, TimeSpan timeSpan)
     {
-        #region Methods
-        public static TimeSpan TranslateSimulatedTimeToRealTime(this ITimeService timeService, TimeSpan timeSpan)
-        {
-            Argument.IsNotNull(() => timeService);
+        ArgumentNullException.ThrowIfNull(timeService);
 
-            var realTimeToWaitInMinutes = timeSpan.TotalMinutes * timeService.MinuteDuration.TotalMinutes;
-            var realTimeToWait = TimeSpan.FromMinutes(realTimeToWaitInMinutes);
+        var realTimeToWaitInMinutes = timeSpan.TotalMinutes * timeService.MinuteDuration.TotalMinutes;
+        var realTimeToWait = TimeSpan.FromMinutes(realTimeToWaitInMinutes);
 
-            return realTimeToWait;
-        }
+        return realTimeToWait;
+    }
 
-        public static TimeSpan TranslateRealTimeToSimulatedTime(this ITimeService timeService, TimeSpan timePassed)
-        {
-            Argument.IsNotNull(() => timeService);
+    public static TimeSpan TranslateRealTimeToSimulatedTime(this ITimeService timeService, TimeSpan timePassed)
+    {
+        ArgumentNullException.ThrowIfNull(timeService);
 
-            // Note: time passed is always simulation mode, so we need to get the actual multiplier
-            var multiplier = TimeSpan.FromMinutes(1).TotalSeconds/timeService.MinuteDuration.TotalSeconds;
-            var simTimeInSeconds = timePassed.TotalSeconds*multiplier;
-            var simTimeToWait = TimeSpan.FromSeconds(simTimeInSeconds);
+        // Note: time passed is always simulation mode, so we need to get the actual multiplier
+        var multiplier = TimeSpan.FromMinutes(1).TotalSeconds/timeService.MinuteDuration.TotalSeconds;
+        var simTimeInSeconds = timePassed.TotalSeconds*multiplier;
+        var simTimeToWait = TimeSpan.FromSeconds(simTimeInSeconds);
 
-            return simTimeToWait;
-        }
-        #endregion
+        return simTimeToWait;
     }
 }
