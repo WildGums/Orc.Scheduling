@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 
 public interface IScheduledTask
 {
+    string Id { get; }
     string Name { get; set; }
     DateTime Start { get; set; }
     TimeSpan? Recurring { get; set; }

@@ -15,9 +15,11 @@ public class SchedulingService : ISchedulingService
     private readonly ITimeService _timeService;
 
     private readonly object _lock = new();
+
 #pragma warning disable IDISP006 // Implement IDisposable
     private readonly Timer _timer;
 #pragma warning restore IDISP006 // Implement IDisposable
+
     private readonly List<IScheduledTask> _scheduledTasks = new();
     private readonly List<RunningTaskInfo> _runningTasks = new();
     private readonly List<CancellationToken> _cancelledTokenSources = new();
@@ -47,7 +49,7 @@ public class SchedulingService : ISchedulingService
         lock (_lock)
         {
             return (from task in _scheduledTasks
-                select task).ToList();
+                    select task).ToList();
         }
     }
 
@@ -56,7 +58,7 @@ public class SchedulingService : ISchedulingService
         lock (_lock)
         {
             return (from task in _runningTasks
-                select task.RunningTask).ToList();
+                    select task.RunningTask).ToList();
         }
     }
 
@@ -113,6 +115,12 @@ public class SchedulingService : ISchedulingService
         {
             Log.Debug("Adding scheduled task {0}", scheduledTask);
 
+            if (_scheduledTasks.Any(x => string.Equals(scheduledTask.Id, x.Id, StringComparison.OrdinalIgnoreCase)))
+            {
+                Log.Debug("Task with the same ID is already registered, to replace a task, remove it first");
+                return;
+            }
+
             _scheduledTasks.Add(scheduledTask);
 
             UpdateTimerForNextEvent();
@@ -131,7 +139,7 @@ public class SchedulingService : ISchedulingService
 
             for (var i = 0; i < _scheduledTasks.Count; i++)
             {
-                if (ReferenceEquals(scheduledTask, _scheduledTasks[i]))
+                if (string.Equals(scheduledTask.Id, _scheduledTasks[i].Id, StringComparison.OrdinalIgnoreCase))
                 {
                     _scheduledTasks.RemoveAt(i--);
                     removedAnything = true;
@@ -334,7 +342,7 @@ public class SchedulingService : ISchedulingService
                 RescheduleRecurringTask(runningTask);
             }
 
-            if (!task.IsCanceled && 
+            if (!task.IsCanceled &&
                 (!cancellationTokenSource?.IsCancellationRequested ?? false) &&
                 !_cancelledTokenSources.Contains(cancellationToken))
             {
