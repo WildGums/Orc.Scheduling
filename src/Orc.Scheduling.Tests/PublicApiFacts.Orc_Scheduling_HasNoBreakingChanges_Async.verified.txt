@@ -68,7 +68,7 @@ namespace Orc.Scheduling
     public abstract class ScheduledTaskBase : Orc.Scheduling.IScheduledTask
     {
         protected ScheduledTaskBase() { }
-        public virtual string Id { get; set; }
+        public virtual string Id { get; protected set; }
         public System.TimeSpan MaximumDuration { get; set; }
         public string Name { get; set; }
         public System.TimeSpan? Recurring { get; set; }
