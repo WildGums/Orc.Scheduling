@@ -109,6 +109,11 @@ public class SchedulingService : ISchedulingService
 
     public void AddScheduledTask(IScheduledTask scheduledTask)
     {
+        AddScheduledTask(scheduledTask, true);
+    }
+
+    private void AddScheduledTask(IScheduledTask scheduledTask, bool updateTimer)
+    {
         ArgumentNullException.ThrowIfNull(scheduledTask);
 
         lock (_lock)
@@ -123,7 +128,10 @@ public class SchedulingService : ISchedulingService
 
             _scheduledTasks.Add(scheduledTask);
 
-            UpdateTimerForNextEvent();
+            if (updateTimer)
+            {
+                UpdateTimerForNextEvent();
+            }
         }
     }
 
@@ -179,13 +187,19 @@ public class SchedulingService : ISchedulingService
             }
         }
 
-        foreach (var taskToStart in tasksToStart)
+        var anyTasks = tasksToStart.Count > 0;
+        if (anyTasks)
         {
-            StartTask(taskToStart);
+            foreach (var taskToStart in tasksToStart)
+            {
+                StartTask(taskToStart, false);
+            }
+
+            UpdateTimerForNextEvent();
         }
     }
 
-    private void StartTask(IScheduledTask scheduledTask)
+    private void StartTask(IScheduledTask scheduledTask, bool updateTimer)
     {
         Task? task = null;
         RunningTask? runningTask = null;
@@ -213,11 +227,14 @@ public class SchedulingService : ISchedulingService
         if (!scheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
         {
             // Schedule immediately, even though task is still running
-            RescheduleRecurringTask(runningTask);
+            RescheduleRecurringTask(runningTask, updateTimer);
         }
 
         // Important: always add to running tasks and fire task started event
-        _runningTasks.Add(new RunningTaskInfo(task, runningTask));
+        lock (_lock)
+        {
+            _runningTasks.Add(new RunningTaskInfo(task, runningTask));
+        }
 
         TaskStarted?.Invoke(this, new TaskEventArgs(runningTask));
 
@@ -266,7 +283,7 @@ public class SchedulingService : ISchedulingService
         }
     }
 
-    private void RescheduleRecurringTask(RunningTask runningTask)
+    private void RescheduleRecurringTask(RunningTask runningTask, bool updateTimer)
     {
         // Note: it's important to start possible recurring tasks outside the loop
         var scheduledTask = runningTask.ScheduledTask;
@@ -292,7 +309,7 @@ public class SchedulingService : ISchedulingService
 
             newScheduledTask.Start = startDate;
 
-            AddScheduledTask(newScheduledTask);
+            AddScheduledTask(newScheduledTask, updateTimer);
         }
     }
 
@@ -339,7 +356,7 @@ public class SchedulingService : ISchedulingService
 
             if (runningTask.ScheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
             {
-                RescheduleRecurringTask(runningTask);
+                RescheduleRecurringTask(runningTask, true);
             }
 
             if (!task.IsCanceled &&
@@ -351,7 +368,7 @@ public class SchedulingService : ISchedulingService
         }
     }
 
-    private void UpdateTimerForNextEvent()
+    internal virtual void UpdateTimerForNextEvent()
     {
         var now = _timeService.CurrentDateTime;
         var delta = TimeSpan.MaxValue;
