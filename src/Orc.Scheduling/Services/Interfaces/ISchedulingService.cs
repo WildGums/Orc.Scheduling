@@ -11,8 +11,8 @@ public interface ISchedulingService
     event EventHandler<TaskEventArgs>? TaskCanceled;
     event EventHandler<TaskEventArgs>? TaskCompleted;
 
-    List<IScheduledTask> GetScheduledTasks();
-    List<RunningTask> GetRunningTasks();
+    IReadOnlyList<IScheduledTask> GetScheduledTasks();
+    IReadOnlyList<RunningTask> GetRunningTasks();
 
     void Start();
     void Stop();

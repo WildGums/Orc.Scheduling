@@ -1,6 +1,6 @@
-<Project Sdk="MSBuild.Sdk.Extras">
+﻿<Project Sdk="MSBuild.Sdk.Extras">
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>net8.0;net9.0</TargetFrameworks>
     <AssemblyName>Orc.Scheduling</AssemblyName>
     <RootNamespace>Orc.Scheduling</RootNamespace>
     <DefaultLanguage>en-US</DefaultLanguage>
@@ -18,11 +18,11 @@
   <ItemGroup>
     <PackageReference Include="Catel.Core" Version="6.0.0" />
     <PackageReference Include="Catel.Fody" Version="4.9.0" PrivateAssets="all" />
-    <PackageReference Include="Fody" Version="6.8.1" PrivateAssets="all">
+    <PackageReference Include="Fody" Version="6.9.2" PrivateAssets="all">
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
     </PackageReference>
     <PackageReference Include="ModuleInit.Fody" Version="2.1.1" PrivateAssets="all" />
-    <PackageReference Include="Obsolete.Fody" Version="5.3.0" PrivateAssets="all" />
+    <PackageReference Include="Obsolete.Fody" Version="5.3.1" PrivateAssets="all" />
   </ItemGroup>
 
   <Import Project="$(MSBuildProjectDirectory)\..\Directory.build.nullable.props" Condition="Exists('$(MSBuildProjectDirectory)\..\Directory.build.nullable.props')" />

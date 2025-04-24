@@ -387,4 +387,33 @@ public class SchedulingServiceFacts
 
         Assert.That(scheduledTasks.Count, Is.EqualTo(1));
     }
+
+    [Test]
+    public async Task Does_Not_Stress_Schedule_Tasks_Async()
+    {
+        // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
+        var timeService = new TimeService(TimeSpan.FromSeconds(1));
+        var schedulingService = new TestSchedulingService(timeService);
+
+        for (var i = 0; i < 10; i++)
+        {
+            // Schedule task without start date
+            var scheduledTask = new ScheduledTask
+            {
+                Name = $"task {i + 1}",
+                Recurring = TimeSpan.FromHours(1),
+                ScheduleRecurringTaskAfterTaskExecutionHasCompleted = false,
+                Action = async () => { await Task.Delay(1000); }
+            };
+
+            schedulingService.AddScheduledTask(scheduledTask);
+        }
+
+        Assert.That(schedulingService.UpdateTimerCounter, Is.EqualTo(10));
+
+        await Task.Delay(2500);
+
+        Assert.That(schedulingService.GetRunningTasks().Count, Is.EqualTo(0));
+        Assert.That(schedulingService.UpdateTimerCounter, Is.EqualTo(12));
+    }
 }
