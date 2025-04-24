@@ -44,21 +44,21 @@ public class SchedulingService : ISchedulingService
 
     public event EventHandler<TaskEventArgs>? TaskCompleted;
 
-    public List<IScheduledTask> GetScheduledTasks()
+    public IReadOnlyList<IScheduledTask> GetScheduledTasks()
     {
         lock (_lock)
         {
             return (from task in _scheduledTasks
-                    select task).ToList();
+                    select task).ToArray();
         }
     }
 
-    public List<RunningTask> GetRunningTasks()
+    public IReadOnlyList<RunningTask> GetRunningTasks()
     {
         lock (_lock)
         {
             return (from task in _runningTasks
-                    select task.RunningTask).ToList();
+                    select task.RunningTask).ToArray();
         }
     }
 
