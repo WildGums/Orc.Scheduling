@@ -1,23 +1,14 @@
 ﻿namespace Orc.Scheduling;
 
-using System;
 using System.Linq;
 using System.Text;
-using Catel.IoC;
 using Catel.Services;
 using Catel.Text;
 
 public static class ISchedulingServiceExtensions
 {
-    public static string GetSummary(this ISchedulingService schedulingService)
+    public static string GetSummary(this ISchedulingService schedulingService, ILanguageService languageService)
     {
-        ArgumentNullException.ThrowIfNull(schedulingService);
-
-#pragma warning disable IDISP001 // Dispose created
-        var serviceLocator = schedulingService.GetServiceLocator();
-#pragma warning restore IDISP001 // Dispose created
-        var languageService = serviceLocator.ResolveRequiredType<ILanguageService>();
-
         var scheduledTasks = (from task in schedulingService.GetScheduledTasks()
             orderby task.Start
             select task).ToList();
@@ -28,7 +19,7 @@ public static class ISchedulingServiceExtensions
 
         var stringBuilder = new StringBuilder();
 
-        stringBuilder.AppendLine(languageService.GetString("Scheduling_RunningTasks"));
+        stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_RunningTasks"));
         stringBuilder.AppendLine("=============================");
         stringBuilder.AppendLine();
 
@@ -39,7 +30,7 @@ public static class ISchedulingServiceExtensions
 
         stringBuilder.AppendLine();
 
-        stringBuilder.AppendLine(languageService.GetString("Scheduling_ScheduledTasks"));
+        stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_ScheduledTasks"));
         stringBuilder.AppendLine("=============================");
         stringBuilder.AppendLine();
 

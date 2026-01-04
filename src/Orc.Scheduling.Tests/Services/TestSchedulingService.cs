@@ -1,9 +1,11 @@
 ﻿namespace Orc.Scheduling.Tests.Services
 {
+    using Microsoft.Extensions.Logging.Abstractions;
+
     internal class TestSchedulingService : SchedulingService
     {
         public TestSchedulingService(ITimeService timeService) 
-            : base(timeService)
+            : base(NullLogger<SchedulingService>.Instance, timeService)
         {
         }
 

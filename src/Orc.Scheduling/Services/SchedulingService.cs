@@ -7,11 +7,11 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catel.Logging;
+using Microsoft.Extensions.Logging;
 
 public class SchedulingService : ISchedulingService
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
-
+    private readonly ILogger<SchedulingService> _logger;
     private readonly ITimeService _timeService;
 
     private readonly object _lock = new();
@@ -26,11 +26,11 @@ public class SchedulingService : ISchedulingService
 
     private bool _isUpdating;
 
-    public SchedulingService(ITimeService timeService)
+    public SchedulingService(ILogger<SchedulingService> logger, ITimeService timeService)
     {
-        ArgumentNullException.ThrowIfNull(timeService);
-
+        _logger = logger;
         _timeService = timeService;
+
         _timer = new Timer(OnTimerTick);
 
         IsEnabled = true;
@@ -68,11 +68,11 @@ public class SchedulingService : ISchedulingService
         {
             if (IsEnabled)
             {
-                Log.Debug("Timer is already running, no need to start");
+                _logger.LogDebug("Timer is already running, no need to start");
                 return;
             }
 
-            Log.Debug("Starting timer");
+            _logger.LogDebug("Starting timer");
 
             IsEnabled = true;
 
@@ -86,15 +86,15 @@ public class SchedulingService : ISchedulingService
         {
             if (!IsEnabled)
             {
-                Log.Debug("Timer is not running, no need to stop");
+                _logger.LogDebug("Timer is not running, no need to stop");
                 return;
             }
 
-            Log.Debug("Stopping timer");
+            _logger.LogDebug("Stopping timer");
 
             _timer.Change(Timeout.Infinite, Timeout.Infinite);
 
-            Log.Debug("Canceling all tasks");
+            _logger.LogDebug("Canceling all tasks");
 
             foreach (var runningTask in _runningTasks)
             {
@@ -118,11 +118,11 @@ public class SchedulingService : ISchedulingService
 
         lock (_lock)
         {
-            Log.Debug("Adding scheduled task {0}", scheduledTask);
+            _logger.LogDebug("Adding scheduled task {0}", scheduledTask);
 
             if (_scheduledTasks.Any(x => string.Equals(scheduledTask.Id, x.Id, StringComparison.OrdinalIgnoreCase)))
             {
-                Log.Debug("Task with the same ID is already registered, to replace a task, remove it first");
+                _logger.LogDebug("Task with the same ID is already registered, to replace a task, remove it first");
                 return;
             }
 
@@ -141,7 +141,7 @@ public class SchedulingService : ISchedulingService
 
         lock (_lock)
         {
-            Log.Debug("Removing scheduled task {0}", scheduledTask);
+            _logger.LogDebug("Removing scheduled task {0}", scheduledTask);
 
             var removedAnything = false;
 
@@ -211,7 +211,7 @@ public class SchedulingService : ISchedulingService
                 return;
             }
 
-            Log.Debug($"Starting task {scheduledTask}");
+            _logger.LogDebug($"Starting task {scheduledTask}");
 
             runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
 
@@ -221,7 +221,7 @@ public class SchedulingService : ISchedulingService
             task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
 
-            Log.Debug($"Started task {scheduledTask}");
+            _logger.LogDebug($"Started task {scheduledTask}");
         }
 
         if (!scheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
@@ -265,7 +265,7 @@ public class SchedulingService : ISchedulingService
 
     private void TerminateTask(RunningTask runningTask)
     {
-        Log.Debug($"Terminating task {runningTask}");
+        _logger.LogDebug($"Terminating task {runningTask}");
 
         lock (_lock)
         {
@@ -305,7 +305,7 @@ public class SchedulingService : ISchedulingService
                 startDate = startDate.Add(scheduledTask.Recurring.Value);
             }
 
-            Log.Debug($"Task {scheduledTask} is a recurring task, rescheduling a copy at '{startDate}'");
+            _logger.LogDebug($"Task {scheduledTask} is a recurring task, rescheduling a copy at '{startDate}'");
 
             newScheduledTask.Start = startDate;
 
@@ -328,7 +328,7 @@ public class SchedulingService : ISchedulingService
         stringBuilder.AppendLine($"  * Faulted: {task.IsFaulted}");
         stringBuilder.AppendLine($"  * Exception: {exception}");
 
-        Log.Debug(stringBuilder.ToString());
+        _logger.LogDebug(stringBuilder.ToString());
 
         lock (_lock)
         {
@@ -352,7 +352,7 @@ public class SchedulingService : ISchedulingService
 
         if (runningTask is not null)
         {
-            Log.Debug($"Found task '{runningTask}' for the completed task");
+            _logger.LogDebug($"Found task '{runningTask}' for the completed task");
 
             if (runningTask.ScheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
             {
@@ -380,7 +380,7 @@ public class SchedulingService : ISchedulingService
                 return;
             }
 
-            Log.Debug("Calculating next timer tick");
+            _logger.LogDebug("Calculating next timer tick");
 
             foreach (var scheduledTask in _scheduledTasks)
             {
@@ -413,13 +413,13 @@ public class SchedulingService : ISchedulingService
 
         if (delta == TimeSpan.MaxValue)
         {
-            Log.Debug("Disabling timer, no upcoming events");
+            _logger.LogDebug("Disabling timer, no upcoming events");
 
             delta = Timeout.InfiniteTimeSpan;
         }
         else
         {
-            Log.Debug($"Updating next timer tick to become active in '{delta}'");
+            _logger.LogDebug($"Updating next timer tick to become active in '{delta}'");
 
             // We need to translate time, we might have to wait 30 minutes, but that is 30 seconds if a minute takes just 1 second
             var simulatedDelta = _timeService.TranslateSimulatedTimeToRealTime(delta);
@@ -465,7 +465,7 @@ public class SchedulingService : ISchedulingService
         }
         catch (Exception ex)
         {
-            Log.Error(ex, "Failed to update the tasks");
+            _logger.LogError(ex, "Failed to update the tasks");
         }
 
         lock (_lock)

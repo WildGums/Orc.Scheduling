@@ -1,4 +1,4 @@
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using System.Diagnostics;
 using Catel.Logging;
 
@@ -13,6 +13,5 @@ public static class ModuleInitializer
     [ModuleInitializer]
     public static void Initialize()
     {
-        LogManager.AddDebugListener();
     }
 }
