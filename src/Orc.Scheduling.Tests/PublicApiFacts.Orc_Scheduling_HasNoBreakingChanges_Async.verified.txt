@@ -7,6 +7,13 @@ public static class ModuleInitializer
     [System.Runtime.CompilerServices.ModuleInitializer]
     public static void Initialize() { }
 }
+namespace Orc
+{
+    public static class OrcSchedulingModule
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcScheduling(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
+    }
+}
 namespace Orc.Scheduling
 {
     public interface IScheduledTask
@@ -47,10 +54,6 @@ namespace Orc.Scheduling
     {
         public static System.TimeSpan TranslateRealTimeToSimulatedTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timePassed) { }
         public static System.TimeSpan TranslateSimulatedTimeToRealTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timeSpan) { }
-    }
-    public static class OrcSchedulingModule
-    {
-        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcScheduling(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
     }
     public class RunningTask
     {
