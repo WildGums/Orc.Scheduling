@@ -3,10 +3,11 @@
 using System;
 using System.Threading.Tasks;
 using Catel.Logging;
+using Microsoft.Extensions.Logging;
 
 public class TimeService : ITimeService
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(TimeService));
 
     private readonly DateTime _start;
     private readonly DateTime _actualStart;
@@ -23,7 +24,7 @@ public class TimeService : ITimeService
 
     public TimeService(TimeSpan minuteDuration, DateTime start)
     {
-        Log.Debug("Creating time service where a minute lasts for '{0}' seconds, start date/time is '{1}'", minuteDuration.TotalSeconds, start);
+        Logger.LogDebug("Creating time service where a minute lasts for '{0}' seconds, start date/time is '{1}'", minuteDuration.TotalSeconds, start);
 
         _start = start;
         _actualStart = DateTime.Now;

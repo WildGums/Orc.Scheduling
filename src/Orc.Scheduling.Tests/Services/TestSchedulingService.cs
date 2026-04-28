@@ -1,19 +1,20 @@
-﻿namespace Orc.Scheduling.Tests.Services
+﻿namespace Orc.Scheduling.Tests.Services;
+
+using Microsoft.Extensions.Logging.Abstractions;
+
+internal class TestSchedulingService : SchedulingService
 {
-    internal class TestSchedulingService : SchedulingService
+    public TestSchedulingService(ITimeService timeService) 
+        : base(NullLogger<SchedulingService>.Instance, timeService)
     {
-        public TestSchedulingService(ITimeService timeService) 
-            : base(timeService)
-        {
-        }
+    }
 
-        public int UpdateTimerCounter { get; private set; }
+    public int UpdateTimerCounter { get; private set; }
 
-        internal override void UpdateTimerForNextEvent()
-        {
-            UpdateTimerCounter++;
+    internal override void UpdateTimerForNextEvent()
+    {
+        UpdateTimerCounter++;
 
-            base.UpdateTimerForNextEvent();
-        }
+        base.UpdateTimerForNextEvent();
     }
 }

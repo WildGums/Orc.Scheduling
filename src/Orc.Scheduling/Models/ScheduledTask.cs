@@ -3,10 +3,11 @@
 using System;
 using System.Threading.Tasks;
 using Catel.Logging;
+using Microsoft.Extensions.Logging;
 
 public class ScheduledTask : ScheduledTaskBase
 {
-    private static readonly ILog Log = LogManager.GetCurrentClassLogger();
+    private static readonly ILogger Logger = LogManager.GetLogger(typeof(ScheduledTask));
 
     public ScheduledTask()
     {
@@ -20,7 +21,7 @@ public class ScheduledTask : ScheduledTaskBase
         var action = Action;
         if (action is null)
         {
-            throw Log.ErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
+            throw Logger.LogErrorAndCreateException<InvalidOperationException>("ScheduledTask.Action cannot be null, please provide an action to execute");
         }
 
         await action();

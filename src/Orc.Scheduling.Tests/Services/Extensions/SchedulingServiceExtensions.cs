@@ -2,6 +2,9 @@
 
 using System;
 using System.Threading.Tasks;
+using Catel.Services;
+using Microsoft.Extensions.Logging.Abstractions;
+using Moq;
 using NUnit.Framework;
 
 public class SchedulingServiceExtensions
@@ -10,10 +13,10 @@ public class SchedulingServiceExtensions
     public class TheGetSummaryMethod
     {
         [Test]
-        public async Task ShowsRunningAndScheduledTasksAsync()
+        public async Task Shows_Running_And_Scheduled_Tasks()
         {
             var timeService = new TimeService(TimeSpan.FromSeconds(1));
-            var schedulingService = new SchedulingService(timeService);
+            var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
             var scheduledTask1 = new ScheduledTask
             {
@@ -37,7 +40,11 @@ public class SchedulingServiceExtensions
 
             await Task.Delay(TimeSpan.FromSeconds(1));
 
-            var summary = schedulingService.GetSummary();
+            var languageServiceMock = new Mock<ILanguageService>();
+            languageServiceMock.Setup(x => x.GetString(It.IsAny<string>()))
+                .Returns((string s) => s);
+
+            var summary = schedulingService.GetSummary(languageServiceMock.Object);
 
             Assert.That(summary, Is.Not.Null);
         }

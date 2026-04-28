@@ -3,17 +3,18 @@
 using System;
 using System.Linq;
 using System.Threading.Tasks;
-using NUnit.Framework;
 using Catel.Threading;
+using Microsoft.Extensions.Logging.Abstractions;
+using NUnit.Framework;
 
 [TestFixture]
 public class SchedulingServiceFacts
 {
     [Test]
-    public async Task Completes_Tasks_After_Specific_Period_Async()
+    public async Task Completes_Tasks_After_Specific_Period()
     {
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {
@@ -68,11 +69,11 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Restarts_Recurring_Tasks_Async()
+    public async Task Restarts_Recurring_Tasks()
     {
         // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
         var timeService = new TimeService(TimeSpan.FromMinutes(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {
@@ -126,10 +127,10 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Cancels_Running_Tasks_Above_Maximum_Duration_Async()
+    public async Task Cancels_Running_Tasks_Above_Maximum_Duration()
     {
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {
@@ -182,10 +183,10 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Cancels_Running_Tasks_When_Stop_Is_Invoked_Async()
+    public async Task Cancels_Running_Tasks_When_Stop_Is_Invoked()
     {
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {
@@ -237,10 +238,10 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Removes_Scheduled_Tasks_Async()
+    public async Task Removes_Scheduled_Tasks()
     {
         var timeService = new TimeService(TimeSpan.FromMinutes(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {
@@ -270,20 +271,20 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Disables_Timer_When_No_Tasks_Are_Scheduled_Async()
+    public async Task Disables_Timer_When_No_Tasks_Are_Scheduled()
     {
         var timeService = new TimeService(TimeSpan.FromMinutes(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         schedulingService.Start();
     }
 
     [Test]
-    public async Task Respects_Rescheduling_After_Execution_Completed_Is_False_Async()
+    public async Task Respects_Rescheduling_After_Execution_Completed_Is_False()
     {
         // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
         var hasReceivedCompletedEvent = false;
 
         var scheduledTask1 = new ScheduledTask
@@ -317,11 +318,11 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Respects_Rescheduling_After_Execution_Completed_Is_True_Async()
+    public async Task Respects_Rescheduling_After_Execution_Completed_Is_True()
     {
         // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
         var hasReceivedCompletedEvent = false;
 
         var scheduledTask1 = new ScheduledTask
@@ -363,11 +364,11 @@ public class SchedulingServiceFacts
     }
 
     [Test]
-    public async Task Does_Not_Register_Already_Registered_Task_Async()
+    public async Task Does_Not_Register_Already_Registered_Task()
     {
         // Note: this is a real-time service! Don't wait for minutes here, otherwise unit tests will take too long ;-)
         var timeService = new TimeService(TimeSpan.FromSeconds(1));
-        var schedulingService = new SchedulingService(timeService);
+        var schedulingService = new SchedulingService(NullLogger<SchedulingService>.Instance, timeService);
 
         var scheduledTask1 = new ScheduledTask
         {

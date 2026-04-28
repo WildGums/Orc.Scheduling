@@ -7,6 +7,13 @@ public static class ModuleInitializer
     [System.Runtime.CompilerServices.ModuleInitializer]
     public static void Initialize() { }
 }
+namespace Orc
+{
+    public static class OrcSchedulingModule
+    {
+        public static Microsoft.Extensions.DependencyInjection.IServiceCollection AddOrcScheduling(this Microsoft.Extensions.DependencyInjection.IServiceCollection serviceCollection) { }
+    }
+}
 namespace Orc.Scheduling
 {
     public interface IScheduledTask
@@ -35,7 +42,7 @@ namespace Orc.Scheduling
     }
     public static class ISchedulingServiceExtensions
     {
-        public static string GetSummary(this Orc.Scheduling.ISchedulingService schedulingService) { }
+        public static string GetSummary(this Orc.Scheduling.ISchedulingService schedulingService, Catel.Services.ILanguageService languageService) { }
     }
     public interface ITimeService
     {
@@ -82,7 +89,7 @@ namespace Orc.Scheduling
     }
     public class SchedulingService : Orc.Scheduling.ISchedulingService
     {
-        public SchedulingService(Orc.Scheduling.ITimeService timeService) { }
+        public SchedulingService(Microsoft.Extensions.Logging.ILogger<Orc.Scheduling.SchedulingService> logger, Orc.Scheduling.ITimeService timeService) { }
         public bool IsEnabled { get; }
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCanceled;
         public event System.EventHandler<Orc.Scheduling.TaskEventArgs>? TaskCompleted;
