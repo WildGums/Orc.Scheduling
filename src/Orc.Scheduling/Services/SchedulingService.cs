@@ -3,7 +3,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Catel.Logging;
@@ -118,7 +117,7 @@ public class SchedulingService : ISchedulingService
 
         lock (_lock)
         {
-            _logger.LogDebug("Adding scheduled task {0}", scheduledTask);
+            _logger.LogDebug("Adding scheduled task {ScheduledTask}", scheduledTask);
 
             if (_scheduledTasks.Any(x => string.Equals(scheduledTask.Id, x.Id, StringComparison.OrdinalIgnoreCase)))
             {
@@ -141,7 +140,7 @@ public class SchedulingService : ISchedulingService
 
         lock (_lock)
         {
-            _logger.LogDebug("Removing scheduled task {0}", scheduledTask);
+            _logger.LogDebug("Removing scheduled task {ScheduledTask}", scheduledTask);
 
             var removedAnything = false;
 
@@ -211,7 +210,7 @@ public class SchedulingService : ISchedulingService
                 return;
             }
 
-            _logger.LogDebug($"Starting task {scheduledTask}");
+            _logger.LogDebug("Starting task {ScheduledTask}", scheduledTask);
 
             runningTask = new RunningTask(scheduledTask, _timeService.CurrentDateTime);
 
@@ -221,7 +220,7 @@ public class SchedulingService : ISchedulingService
             task.ContinueWith(OnRunningTaskCompleted);
 #pragma warning restore 4014
 
-            _logger.LogDebug($"Started task {scheduledTask}");
+            _logger.LogDebug("Started task {ScheduledTask}", scheduledTask);
         }
 
         if (!scheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
@@ -265,7 +264,7 @@ public class SchedulingService : ISchedulingService
 
     private void TerminateTask(RunningTask runningTask)
     {
-        _logger.LogDebug($"Terminating task {runningTask}");
+        _logger.LogDebug("Terminating task {RunningTask}", runningTask);
 
         lock (_lock)
         {
@@ -305,7 +304,7 @@ public class SchedulingService : ISchedulingService
                 startDate = startDate.Add(scheduledTask.Recurring.Value);
             }
 
-            _logger.LogDebug($"Task {scheduledTask} is a recurring task, rescheduling a copy at '{startDate}'");
+            _logger.LogDebug("Task {ScheduledTask} is a recurring task, rescheduling a copy at {StartDate}", scheduledTask, startDate);
 
             newScheduledTask.Start = startDate;
 
@@ -321,14 +320,8 @@ public class SchedulingService : ISchedulingService
 
         var exception = task.Exception;
 
-        var stringBuilder = new StringBuilder();
-        stringBuilder.AppendLine($"Task completed, searching for existing running task");
-        stringBuilder.AppendLine($"  * Canceled: {task.IsCanceled}");
-        stringBuilder.AppendLine($"  * Completed: {task.IsCompleted}");
-        stringBuilder.AppendLine($"  * Faulted: {task.IsFaulted}");
-        stringBuilder.AppendLine($"  * Exception: {exception}");
-
-        _logger.LogDebug(stringBuilder.ToString());
+        _logger.LogDebug("Task completed, searching for existing running task. Canceled: {Canceled}, Completed: {Completed}, Faulted: {Faulted}, Exception: {Exception}",
+            task.IsCanceled, task.IsCompleted, task.IsFaulted, exception);
 
         lock (_lock)
         {
@@ -352,7 +345,7 @@ public class SchedulingService : ISchedulingService
 
         if (runningTask is not null)
         {
-            _logger.LogDebug($"Found task '{runningTask}' for the completed task");
+            _logger.LogDebug("Found task {RunningTask} for the completed task", runningTask);
 
             if (runningTask.ScheduledTask.ScheduleRecurringTaskAfterTaskExecutionHasCompleted)
             {
@@ -419,7 +412,7 @@ public class SchedulingService : ISchedulingService
         }
         else
         {
-            _logger.LogDebug($"Updating next timer tick to become active in '{delta}'");
+            _logger.LogDebug("Updating next timer tick to become active in {Delta}", delta);
 
             // We need to translate time, we might have to wait 30 minutes, but that is 30 seconds if a minute takes just 1 second
             var simulatedDelta = _timeService.TranslateSimulatedTimeToRealTime(delta);
