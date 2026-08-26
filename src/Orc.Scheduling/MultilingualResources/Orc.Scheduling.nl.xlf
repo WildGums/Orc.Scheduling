@@ -14,6 +14,14 @@
           <source>Scheduled tasks</source>
           <target state="translated">Geplande taken</target>
         </trans-unit>
+        <trans-unit id="Scheduling_Separator" translate="no" xml:space="preserve">
+          <source>=============================</source>
+          <target state="needs-review-translation">=============================</target>
+        </trans-unit>
+        <trans-unit id="Scheduling_TaskItem" translate="yes" xml:space="preserve">
+          <source>* {0}</source>
+          <target state="needs-review-translation">* {0}</target>
+        </trans-unit>
       </group>
     </body>
   </file>

@@ -20,23 +20,23 @@ public static class ISchedulingServiceExtensions
         var stringBuilder = new StringBuilder();
 
         stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_RunningTasks"));
-        stringBuilder.AppendLine("=============================");
+        stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_Separator"));
         stringBuilder.AppendLine();
 
         foreach (var runningTask in runningTasks)
         {
-            stringBuilder.AppendLine("* {0}", runningTask);
+            stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_TaskItem"), runningTask);
         }
 
         stringBuilder.AppendLine();
 
         stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_ScheduledTasks"));
-        stringBuilder.AppendLine("=============================");
+        stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_Separator"));
         stringBuilder.AppendLine();
 
         foreach (var scheduledTask in scheduledTasks)
         {
-            stringBuilder.AppendLine("* {0}", scheduledTask);
+            stringBuilder.AppendLine(languageService.GetRequiredString("Scheduling_TaskItem"), scheduledTask);
         }
 
         return stringBuilder.ToString();

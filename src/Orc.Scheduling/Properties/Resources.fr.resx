@@ -18,4 +18,10 @@
   <data name="Scheduling_ScheduledTasks" xml:space="preserve">
     <value>Scheduled tasks</value>
   </data>
+  <data name="Scheduling_Separator" xml:space="preserve">
+    <value>=============================</value>
+  </data>
+  <data name="Scheduling_TaskItem" xml:space="preserve">
+    <value>* {0}</value>
+  </data>
 </root>
