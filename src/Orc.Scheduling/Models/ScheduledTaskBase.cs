@@ -30,7 +30,7 @@ public abstract class ScheduledTaskBase : IScheduledTask
 
     public string Name { get; set; }
 
-    public DateTime Start { get; set; }
+    public DateTimeOffset Start { get; set; }
 
     public TimeSpan? Recurring { get; set; }
 

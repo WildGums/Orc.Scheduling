@@ -23,7 +23,7 @@ namespace Orc.Scheduling
         string Name { get; set; }
         System.TimeSpan? Recurring { get; set; }
         bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
-        System.DateTime Start { get; set; }
+        System.DateTimeOffset Start { get; set; }
         Orc.Scheduling.IScheduledTask Clone();
         System.Threading.Tasks.Task InvokeAsync();
     }
@@ -46,21 +46,19 @@ namespace Orc.Scheduling
     }
     public interface ITimeService
     {
-        System.DateTime CurrentDateTime { get; }
+        System.DateTimeOffset CurrentDateTime { get; }
         System.TimeSpan MinuteDuration { get; }
+        System.TimeSpan TranslateRealTimeToSimulatedTime(System.TimeSpan timePassed);
+        System.TimeSpan TranslateSimulatedTimeToRealTime(System.TimeSpan timeSpan);
         System.Threading.Tasks.Task WaitAsync(System.TimeSpan timeSpan);
     }
-    public static class ITimeServiceExtensions
-    {
-        public static System.TimeSpan TranslateRealTimeToSimulatedTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timePassed) { }
-        public static System.TimeSpan TranslateSimulatedTimeToRealTime(this Orc.Scheduling.ITimeService timeService, System.TimeSpan timeSpan) { }
-    }
+    public static class ITimeServiceExtensions { }
     public class RunningTask
     {
-        public RunningTask(Orc.Scheduling.IScheduledTask scheduledTask, System.DateTime started) { }
+        public RunningTask(Orc.Scheduling.IScheduledTask scheduledTask, System.DateTimeOffset started) { }
         public System.Threading.CancellationTokenSource CancellationTokenSource { get; }
         public Orc.Scheduling.IScheduledTask ScheduledTask { get; }
-        public System.DateTime Started { get; }
+        public System.DateTimeOffset Started { get; }
         public override string ToString() { }
     }
     public static class RunningTaskExtensions
@@ -82,7 +80,7 @@ namespace Orc.Scheduling
         public string Name { get; set; }
         public System.TimeSpan? Recurring { get; set; }
         public bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
-        public System.DateTime Start { get; set; }
+        public System.DateTimeOffset Start { get; set; }
         public abstract Orc.Scheduling.IScheduledTask Clone();
         public abstract System.Threading.Tasks.Task InvokeAsync();
         public override string ToString() { }
@@ -110,9 +108,11 @@ namespace Orc.Scheduling
     {
         public TimeService() { }
         public TimeService(System.TimeSpan minuteDuration) { }
-        public TimeService(System.TimeSpan minuteDuration, System.DateTime start) { }
-        public System.DateTime CurrentDateTime { get; }
+        public TimeService(System.TimeSpan minuteDuration, System.DateTimeOffset start) { }
+        public System.DateTimeOffset CurrentDateTime { get; }
         public System.TimeSpan MinuteDuration { get; }
-        public System.Threading.Tasks.Task WaitAsync(System.TimeSpan timeSpan) { }
+        public virtual System.TimeSpan TranslateRealTimeToSimulatedTime(System.TimeSpan timePassed) { }
+        public virtual System.TimeSpan TranslateSimulatedTimeToRealTime(System.TimeSpan timeSpan) { }
+        public virtual System.Threading.Tasks.Task WaitAsync(System.TimeSpan timeSpan) { }
     }
 }

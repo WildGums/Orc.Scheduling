@@ -7,7 +7,7 @@ public interface IScheduledTask
 {
     string Id { get; }
     string Name { get; set; }
-    DateTime Start { get; set; }
+    DateTimeOffset Start { get; set; }
     TimeSpan? Recurring { get; set; }
     bool ScheduleRecurringTaskAfterTaskExecutionHasCompleted { get; set; }
 

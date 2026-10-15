@@ -5,7 +5,7 @@ using System.Threading;
 
 public class RunningTask
 {
-    public RunningTask(IScheduledTask scheduledTask, DateTime started)
+    public RunningTask(IScheduledTask scheduledTask, DateTimeOffset started)
     {
         ArgumentNullException.ThrowIfNull(scheduledTask);
 
@@ -17,7 +17,7 @@ public class RunningTask
 
     public IScheduledTask ScheduledTask { get; private set; }
 
-    public DateTime Started { get; private set; }
+    public DateTimeOffset Started { get; private set; }
 
 #pragma warning disable IDISP006 // Implement IDisposable
     public CancellationTokenSource CancellationTokenSource { get; private set; }
